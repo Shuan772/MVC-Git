@@ -1,0 +1,121 @@
+fieldset war unsichtbar -> War es gar nicht es war nur durch Bootstrap fast nicht sichtbar, da grenzen sehr klein
+fieldset top Border weg -> legend hat zu große width und musst angepasst werden.
+Google suche -> gegoogled. 
+pictogramme -> font awesome
+für Bilder(größen verhalten) -> Card Deck da karte gewisse größe und Bild wird gescaled
+formfelder typen -> genaue Syntax gegoogled
+S.17 für 8 Produkte Details: -> 8 verschiedene Detail Seiten. Am besten nur den Content ändern und nicht die html elemente.
+S.22 Drop Down mit Ebenen wie umsetztbar -> über optgroup
+S.22 Drop Down mit Ebenen Elemente readonly schalten -> disabled reinschreiben 
+S.22 Drop Down mit Ebenen weitere sinnvolle Attribute ->ka 
+
+
+M2 P2 SQL 
+S. 13 
+F: Welche Relationen lassen sich ohne eigene Tabelle abbilden bzw.
+welche nicht? Welche Vorteile bietet jene Vorgehensweise? 
+
+A:Man kann alle Relationen mit Hilfstabellen abbliden normalerweise tut man dies aber nur mit N:M Relationen.
+1:N Relationen realisiert man mit einem Fremdkey in der N Tabelle. 1:1 mit einem Fremd Key in beiden Tabellen.
+Der Vorteil mit Fremd Keys ist das man es direkt sieht und nicht in eine zusätzliche Tabelle muss.
+Dafür kann man mit einer Tabelle einfacher die Relation entfernen (Drop Tabelle).
+
+F: wie Sie die binären Relationstypen (1:1, 1:N, N:M) abgebildet
+haben ?
+
+A:Sie antwort darüber.
+
+F: den Unterschied zwischen Tabellen- und Spalten-Constraints und
+wann welche Art sinnvoll ist ?
+
+A:
+Tabellen Constraint:
+-beziehen sich auf gesamte tabelle  primary key spaltenset   foreign key  check auf spaltenwerte
+Spalten Constraint:
+-beziehen sich nur auf spalte  not null primary key  unique  references  check
+Welche Constraints dienen welchem Zweck?
+-NOT NULL
+Spaltenwert darf nicht NULL werden
+-Primary key
+Spalte wird als Primärschlüssel verwendet (einzelnes Attribut)
+-unique
+Spaltenwert muss eindeutig sein
+-references
+Spalte wird als Fremdschlüssel verwendet
+-check
+benutzerdefinierbare Bedingungen auf Spaltenwerte
+
+F: welche Constraints in MariaDB welchem Zweck dienen
+wie Sie den Aufzählungsdatentyp ENUM, den MariaDB
+unterstützt, per CHECK Constraint auch in anderen DBMS
+nachbilden könnten ?
+
+A:
+ENUM als CHECK Constraint
+-CREATE TYPE valid_colors AS ENUM ('red', 'green', 'blue');
+
+CREATE TABLE t (
+    color VALID_COLORS
+);
+CREATE TABLE t (
+    colors TEXT CHECK (colors IN ('red', 'green', 'blue'))
+);
+
+F: was das Semikolon am Ende einer Anweisung bewirkt?
+
+A:Das Semikolon am Ende einer Anweisung schließt einen Anweisungsblock.
+
+
+SQL Queries im SQL Client
+-Zutatenhelper
+query = "SELECT * FROM Zutaten ORDER BY Bio DESC , Name ASC;";
+
+Produktehelper
+query = "SELECT * FROM Mahlzeiten mahl join MahlzeitenXBilder mxb on mahl.ID = mxb.Mahlzeiten join Bilder bild on bild.ID = mxb.Bilder LIMIT 8;";
+query = "SELECT * FROM Mahlzeiten mahl join MahlzeitenXBilder mxb on mahl.ID = mxb.Mahlzeiten join Bilder bild on bild.ID = mxb.Bilder join Kategorien kat on mahl.Kategorie = kat.ID WHERE kat.Bezeichnung ='" + urlbez + "' LIMIT 8;";
+querykat = "SELECT * FROM Kategorien";
+
+Detailhelper
+query = "SELECT * FROM Mahlzeiten mahl JOIN MahlzeitenXBilder mxb ON mahl.ID = mxb.Mahlzeiten JOIN Bilder bild ON bild.ID = mxb.Bilder JOIN preise preis ON preis.MahlzeitenID = mahl.ID WHERE mahl.ID = " + id + ";";
+
+warum die HTTP art gewählt wurde? (aufgabe 4.1)
+Weil Sensibele Daten nicht über die URL lesbar sein sollten.
+
+Beschreiben Sie im Dossier, …
+… weshalb Sie plötzlich einen Cookie gesetzt bekommen nachdem Sie Werte
+in die Session schreiben. Lassen Sie sich den Cookie einmal anzeigen im
+Browser (Entwickler-Tools).
+
+A:
+Der Cookie speichert die Session variablen und wird erst gesetzt wenn etwas hineingeschrieben wird.
+
+
+Erklären Sie die Situation auf Serverseite, wenn Sie den Cookie löschen und
+einen weiteren Request absenden.
+
+A: 
+Die Kennung des Cookies wird als ungülig erklärt und vom server als outdated gesehen, nicht mehr  gültig.
+
+
+Recherchieren Sie, wie eine Anmeldung auch ohne Verwendung von Cookies
+realisiert werden könnte.
+
+A:
+Über einen eintrag in der Datenbank oder ein temporäres Array.
+
+Notieren Sie, wie die Stored Procedure aussieht, die Ihnen den korrekten
+Preis zu einer genannten Nutzer-Nummer und einer Mahlzeiten-ID zurückgibt.
+(oder verwenden Sie sie direkt in der Anwendung)
+
+A:
+Es erhält einen String und testet per Case welcher Preis nun selected und zurückgegeben werden muss.
+
+ 
+Beschreiben Sie, was die Information sha1:64000:18 zu Beginn eines HashStrings
+(siehe nächste Folie) transportiert und wie diese Angaben sich auf Salt
+und Hash auswirken. 
+
+A: 
+sha1 ist der Algorithmus mit dem gehashed wird
+64000 sind die Iterationen 
+18 sind die bytes des Hashs

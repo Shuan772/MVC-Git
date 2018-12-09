@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewBag.Title = "SuccessView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-md-4"></div>
+<div class="col-md-4">
+<h4>Hallo @Session["name"] .Sie sind angemeldet als <b> @Session["role"] </b></h4>
+
+    @{
+        if (Model.LetzterLogin == default(DateTime))
+        {
+            <p>Sie besuchen uns zum ersten Mal.</p>
+                <p> Herzlich Willkommen bei e-Mensa!</p>
+        }
+        else
+        {
+            <p>Sie waren zuletzt am @Model.LetzterLogin bei uns!</p>
+        }
+    }
+
+
+<a class="btn btn-default" role="button" href="~/Home/Index">
+<span class="glyphicon glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+    Abmelden
+</a>
+</div>

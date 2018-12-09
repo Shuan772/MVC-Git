@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewBag.Title = "_RegisterGeneral";
+}
+
+@model DBWT_Paket_5.Models.Register
+
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <h2>Registrierung</h2>
+        <p>*Pflichtfelder</p>
+    </div>
+    <div class="col-md-4"></div>
+</div>
+
+<div class="col-md-4"></div>
+
+<div class="col-md-4">
+    <form method="post">
+        <!--eventuell html begin form-->
+        <fieldset>
+            <legend>Schritt 1</legend>
+            <p>Ich möchte mich registrieren in der Rolle als:</p>
+            <input type="radio" id="st" name="rolle" value="student">
+            <label for="st">Student</label>
+            <br />
+            <input type="radio" id="ma" name="rolle" value="mitarbeiter">
+            <label for="ma">Mitarbeiter</label>
+            <br />
+            <input type="radio" id="ga" name="rolle" value="gast">
+            <label for="ga">Gast</label>
+            <br />
+            <button class="login button2" type="submit">Speichern und weiter</button><br /><br />
+        </fieldset>
+    </form>
+</div>
+
+<div class="col-md-4"></div>
+
+

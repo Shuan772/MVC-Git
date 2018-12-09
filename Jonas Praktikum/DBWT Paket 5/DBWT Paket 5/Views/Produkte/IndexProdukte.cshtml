@@ -1,0 +1,148 @@
+﻿
+@{
+    ViewBag.Title = "IndexProdukte";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using System.Configuration
+@using MySql.Data.MySqlClient
+@{
+  
+  
+
+    // der connection String muss an Ihr Setup angepasst werden
+    const string constring = "Server=localhost;Database=praktikum;Uid=webapp;Pwd=webapp;";
+
+    // diese Methode erlaubt das Definieren des ConStrings in der projektweit genutzten Datei web.config
+    // string constring = ConfigurationManager.ConnectionStrings["mariadb"].ConnectionString;
+
+    int i = Request.QueryString["id"].AsInt(); // Parameter entgegen nehmen
+    int limit = Request.QueryString["limit"].AsInt();
+
+
+}
+@functions
+{
+
+    public static string BlobToBase64(object b)
+    {
+        byte[] bytes = (byte[])b;
+        if (bytes != null)
+        {
+            return Convert.ToBase64String(bytes);
+        }
+        return "";
+    }
+
+}
+
+<div class="container">
+    <div class="col-md-3">
+        <form>
+            <fieldset>
+                <legend>Speisenliste filtern</legend>
+            </fieldset>
+            <div class="form-group">
+                <!-- Single button -->
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Kategorien <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+
+                        @using DBWT_Paket_5.Models
+                        @{
+                            var kategorien = (List<kategorien>)ViewData["kats"];
+                            foreach (var k in kategorien)
+                            {
+                                <li><a href="~/Produkte/IndexProdukte/@k.id">@k.kategorie</a></li>
+                            }
+                        }
+                   @*
+         @using DBWT_Paket_5.Models
+    @{
+        var kategorien = (List<string>)ViewData["MyKats"];
+        int k = 1;
+
+        foreach (string Kat in kategorien)
+        {
+            <li><a href="~/Produkte/IndexProdukte/@k">@Kat</a></li>
+            k++;
+        }
+
+    }
+                *@
+                        @*
+    @{
+
+        MySqlConnection kats = new MySqlConnection(constring);
+
+        kats.Open();
+        MySqlCommand kat;
+        kat = kats.CreateCommand();
+        kat.CommandText = "Select kategorie.ID , kategorie.Bezeichnung from kategorie;";
+        MySqlDataReader z = kat.ExecuteReader();
+
+        while (z.Read())
+        {
+            <li><a href="~/Produkte/IndexProdukte/@z["ID"]">@z["Bezeichnung"]</a></li>
+        }
+        z.Close();
+        kat.Clone();
+
+    }
+                        *@
+                        @*  
+                        *@
+                    </ul>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-default">Speisen filtern</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+ 
+
+
+            <div class="col-md-9">
+                @{
+
+                         <h2>Verfügbare Speisen</h2>
+
+                }
+
+                <div class="col-md-10">
+               @using DBWT_Paket_5.Models
+                    @{ 
+                        var pr = (List<Produkt>)ViewData["MyP"];
+
+                        foreach(var Produkt in pr)
+                        {
+                            int index = 1;
+                            string base64text = BlobToBase64(Produkt.binaer);
+                        <div class="col-md-3">
+                            <img style="height:100px; width:100px;"src="data:image/png;base64,@base64text" alt="@Produkt.Beschreibung" class="img-thumbnail" />
+                            <p class="meal_name">
+                                @Produkt.Name
+                                <br />
+                                <a href="~/Details/Index/@Produkt.ID">Details</a>
+                            </p>
+                        </div>
+                            index++;
+                        }
+                    }
+                </div>
+            </div>
+
+
+
+
+    
+</div>
+
+
+
+
+
+

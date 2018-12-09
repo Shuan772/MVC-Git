@@ -1,0 +1,109 @@
+﻿
+@{
+    ViewBag.Title = "Backend";
+    Layout = "~/Views/Shared/_BELayout.cshtml";
+}
+@model DBWT_Paket_5.Models.Benutzer
+<main class="row">
+
+    <div class="col-md-2"></div>
+
+    <div class="col-md-8">
+
+
+        <div class="row margTop20px margBot10px">
+            <h2>
+                Letzte Anmeldungen
+            </h2>
+
+            <table class="table">
+                <tr>
+                    <th class="width25p">Zeitpunkt</th>
+                    <th class="width55p">Loginname (Email)</th>
+                    <th class="width20p">Aktion</th>
+                </tr>
+
+                @{
+                   
+
+                    if (true)
+                    {
+
+                        foreach (var f in ViewBag.llogin_rollen)
+                        {
+                            <tr>
+                                <td>@f.LetzterLogin</td>
+                                <td>@f.Loginname (@f.Email)</td>
+                                <td>
+                                    @{
+                                        if ((bool)f.Aktiv)
+                                        {
+                                          
+                                            @Html.ActionLink("deaktivieren", "deaktivieren", "Home", new { id = f.NR }, null)
+                                        }
+                                        else
+                                        {
+                                            
+                                            @Html.ActionLink("aktivieren", "aktivieren", "Home", new { id = f.NR }, null)
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                                            }
+                                        }
+                }
+
+            </table>
+        </div>
+
+        <div class="row margBot20px">
+            <h2>
+                Letzte Registrierungen
+            </h2>
+
+            <table class="table">
+                <tr>
+                    <th class="width25p">Datum</th>
+                    <th class="width55p">Loginname (Email)</th>
+                    <th class="width20p">Aktion</th>
+                </tr>
+
+                @{
+                 //   l = ViewBag.lregistrierung;
+
+                    if (true)
+                    {
+                        foreach (var f in ViewBag.lregistrierung_rollen)
+                        {
+                            <tr>
+                                <td>@f.Anlegedatum</td>
+                                <td>@f.Loginname (@f.Email)</td>
+                                <td>
+                                    @{
+                                        if ((bool)f.Aktiv)
+                                        {
+                                      
+                                            @Html.ActionLink("deaktivieren", "deaktivieren", "Home", new { id = f.NR }, null)
+                                        }
+                                        else
+                                        {
+                                      
+                                            @Html.ActionLink("aktivieren", "aktivieren", "Home", new { id = f.NR }, null)
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                                            }
+                                        }
+                }
+            </table>
+        </div>
+
+    </div>
+    @using (Html.BeginForm("Logout", "Login", FormMethod.Post, new { @class = "form-horizontal" }))
+            {
+        <button type="submit" class="btn btn-default">Abmelden</button>
+    }
+    <div class="col-md-2"></div>
+
+</main>

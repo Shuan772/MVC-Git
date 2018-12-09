@@ -1,0 +1,89 @@
+﻿
+@{
+    ViewBag.Title = "_RegisterSpecific";
+}
+
+@model DBWT_Paket_5.Models.Register
+
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <h2>Registrierung</h2>
+        <p>*Pflichtfelder</p>
+    </div>
+    <div class="col-md-4"></div>
+</div>
+
+<div class="col-md-3"></div>
+
+<div class="col-md-6">
+
+    <form method="post">
+        <fieldset>
+            <legend>Schritt 2</legend>
+
+            <input class="login" type="text" name="vorname" placeholder="*Vorname" value=@Model.vorname required>
+            <input class="login" type="text" name="nachname" placeholder="*Nachname" value=@Model.nachname required>
+            <input class="login" type="text" name="loginname" placeholder="*Loginname" value=@Model.benutzername required>
+
+            @{
+                if (Model.alert)
+                {
+                    <p class="achtung">@Model.alert_text_loginname</p>
+                }
+            }
+
+            <input class="login" type="email" maxlength="255" name="email" placeholder="*E-Mail" value=@Model.email required>
+
+            @{
+                if (Model.alert == true && !string.IsNullOrEmpty(Model.alert_text_mail))
+                {
+                    <p class="achtung">@Model.alert_text_mail @Html.ActionLink("loggen Sie sich hier ein.", "Index", "Login")</p>
+                }
+            }
+
+            <br /><br />
+            <p>Passwort benötigt eine Mindestlänge von 8 Zeichen.</p>
+            <input class="login" type="password" minlength="8" name="passwort1" placeholder="*Passwort" required>
+            <input class="login" type="password" name="passwort2" placeholder="*Passwort wiederholen" required>
+
+            @{
+                if (Model.alert)
+                {
+                    <p class="achtung">@Model.alert_text_pw</p>
+                }
+            }
+
+            <br /><br />
+
+
+            @{
+                if (Model.rolle == "Student")
+                {
+                    <input class="login" type="number" min="10001" max="9999999" name="matrikel" placeholder="*Matrikelnummer" required>
+                    <input class="login" type="text" name="studiengang" placeholder="*Studiengang" value=@Model.studiengang required>
+                    <input class="hidden" type="text" name="rolle" value="student" />
+                }
+                else if (Model.rolle == "Mitarbeiter")
+                {
+                    <input class="login" type="text" name="telefon" placeholder="Telefonnummer" value=@Model.telefonnummer>
+                    <input class="login" type="text" name="buero" placeholder="Büro" value=@Model.buero>
+                    <input class="hidden" type="text" name="rolle" value="mitarbeiter" />
+                }
+                else if (Model.rolle == "Gast")
+                {
+                    <input class="login" type="text" name="grund" placeholder="Grund" value=@Model.grund>
+                    <input class="hidden" type="text" name="rolle" value="gast" />
+                }
+            }
+
+            <input class="hidden" type="text" name="schritt2" value="true" />
+            <button class="login button2" type="submit">Speichern und weiter</button>
+
+        </fieldset>
+
+    </form>
+</div>
+
+<div class="col-md-3"></div>
+

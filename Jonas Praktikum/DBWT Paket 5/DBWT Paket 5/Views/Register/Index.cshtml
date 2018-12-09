@@ -1,0 +1,30 @@
+﻿@model DBWT_Paket_5.Models.Register
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="row">
+
+    @{
+        if (Model.erfolgreich)
+        {
+            @Html.Partial("_RegisterErfolgreich");
+        }
+        else
+        {
+            if (Model.rolleGesetzt == false)
+            {
+                @Html.Partial("_RegisterGeneral");
+            }
+            else
+            {
+                @Html.Partial("_RegisterSpecific");
+            }
+        }
+
+    }
+</div>

@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@Page.Title</title>
+
+   
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <div class="col-md-2"><h1><b>e-Mensa</b></h1></div>
+        <div class="col-md-5" style="padding-top:25px;">
+            <nav>
+                <ul class="nav nav-pills unterstriche">
+                    <li>
+                        <a href="@Url.Action("Index", "Home")">Start</a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("xmlsite", "Home")">Mahlzeiten</a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("IndexDetails", "Details")">Bestellung</a>
+                    </li>
+                    <li>
+                        <a href="http://www.fh-aachen.de" target="_blank">FH-Aachen</a>
+                    </li>
+
+                </ul>
+            </nav>
+        </div>
+        <div class="col-md-3"></div>
+        <div class="col-md-3" style="padding-top:25px;">
+            <form action="http://www.google.de/search">
+                <input type="hidden" name="as_sitesearch" value="www.fh-aachen.de" />
+                <input name="q" type="search" placeholder="FH-Suche" />
+                <button type="submit">Suche</button>
+            </form>
+
+        </div>
+
+        <div class="col-md-12"><hr /></div>
+    </div>
+
+ 
+
+    @RenderBody()
+    <div class="container">
+        <div class="col-md-12"><hr /></div>
+        <div class="col-md-2"><h4>(c) 2017 DBWT</h4></div>
+        <div class="col-md-10">
+            <nav>
+                <ul class="nav nav-pills unterstriche">
+                    <li>
+                        <a href="#">Login</a>
+                    </li>
+                    <li>
+                        <a href="#">Registrieren</a>
+                    </li>
+                    <li>
+                        <a href="#">Zutatenliste</a>
+                    </li>
+                    <li>
+                        <a href="~/Impressum.cshtml">Impressum</a>
+                    </li>
+                    <li>
+                        @{
+                            var date = DateTime.Now;
+                        }
+                        @date
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</body>
+</html>

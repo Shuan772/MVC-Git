@@ -1,0 +1,73 @@
+﻿
+@{
+    ViewBag.Title = "xmlsite";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-md-2"></div>
+<div class="col-md-8">
+
+    @{
+
+        List<System.Xml.Linq.XElement> l = new List<System.Xml.Linq.XElement>();
+        int i = 1;
+        if (ViewBag.xml != null)
+        {
+            l = ViewBag.xml;
+        }
+
+        foreach (var v in l)
+        {
+            <div class="row margTop20px margBot10px">
+
+                @if (DateTimeOffset.Parse(v.Attribute("Tag").Value).Date == DateTimeOffset.Now.Date)
+                {
+                    <h3>Heutiges Menü: @v.Element("Motto").Value (KW @v.Attribute("Kalenderwoche").Value)</h3>
+                }
+                else
+                {
+                    <h3>@DateTimeOffset.Parse(v.Attribute("Tag").Value).Date.ToString("d") Menü: @v.Element("Motto").Value (KW @v.Attribute("Kalenderwoche").Value)</h3>
+                }
+
+                <table class="table margBot10px">
+                    <tr>
+                        <th class="width10p">Typ</th>
+                        <th class="width50p">Mahlzeit</th>
+                        <th class="width10p">Preis</th>
+                        @if (v.Attribute("Highlight") != null)
+                        {
+                            <th class="width20p">Bild</th>
+                        }
+                        else
+                        {
+                            <th class="width20p"></th>
+                        }
+
+                    </tr>
+
+                    @foreach (var vv in v.Element("Produkte").Elements("Produkt"))
+                    {
+                        <tr>
+                            <td>@vv.Attribute("Typ").Value.ToString()</td>
+                            <td>
+                                <h4>@vv.Element("titel").Value</h4>
+                                <p>@vv.Element("beschreibung").Value</p>
+                            </td>
+                            <td>@vv.Element("anzeigePreis").Value (@vv.Element("preisVon").Value)</td>
+                            <td>
+                                @if (vv.Element("Bild") != null)
+                                {
+                                    <img src="data:image/png;base64,@vv.Element("Bild").Value" alt="Err" class="thumbnail imgDetails imgProdukteDetails">
+                                }
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            </div>
+        }
+    }
+</div>
+
+
+

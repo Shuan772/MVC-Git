@@ -1,0 +1,103 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+@using MySql.Data.MySqlClient;
+@using System.Configuration;
+
+
+@functions
+{
+
+    public static string BlobToBase64(object b)
+    {
+        byte[] bytes = (byte[])b;
+        if (bytes != null)
+        {
+            return Convert.ToBase64String(bytes);
+        }
+        return "";
+    }
+
+}
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-12">
+                @{
+                    const string constring = "Server=localhost;Database=praktikum;Uid=webapp;Pwd=webapp;";
+                    MySqlConnection con = new MySqlConnection(constring);
+                    con.Open();
+                    MySqlCommand cmd;
+                    cmd = con.CreateCommand();
+                    cmd.CommandText = "select bild.id, bild.Binaerdaten as b from bild where bild.id =9";
+                    MySqlDataReader r = cmd.ExecuteReader();
+
+                    r.Read();
+                    string base64text = BlobToBase64(r["b"]);
+
+
+                }
+
+                <img src="data:image/png;base64,@base64text" alt="Mensa" class="img-rounded" />
+                @{
+                    con.Close();
+                    r.Close();
+                }
+            </div>
+
+        </div>
+        <div class="col-md-3">
+            <h4>
+                Der Dienst <b>e-Mensa</b> ist <br />
+                noch beta. Sie können <br />
+                bereits <a href="@Url.Action("IndexProdukte", "Produkte")" style="text-decoration:underline">Mahlzeiten</a> <br />
+                durchstöbern, aber noch nicht bestellen.
+            </h4>
+        </div>
+        <div class="col-md-7">
+            <h1>Leckere Gerichte vorbestellen</h1><br />
+            <h4>... und gemeinsam mit Kommilitonen und Freunden essen</h4>
+        </div>
+        <div class="col-md-2">
+            <br />
+            @using (Html.BeginForm("IndexLogin", "Login", FormMethod.Get, new { @class = "form-horizontal" }))
+            {
+                <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-hand-right"> Anmelden</span></button>
+            }
+
+            @using (Html.BeginForm("Index", "Register", FormMethod.Get, new { @class = "form-horizontal" }))
+            {
+                <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-hand-right"> Registrieren</span></button>
+            }
+        </div>
+        <div class="col-md-3">
+            <h4>
+                Registrieren Sie sich <br />
+                <a href="@Url.Action("Index", "Register")" style="text-decoration:underline">hier</a> um über die<br />
+                Veröffentlichung des Dienstes per Mail <br />
+                informiert zu werden.
+            </h4>
+        </div>
+        <div class="col-md-9">
+            <img src="data:image/png;base64,@base64text" alt="Mensa" class="img-rounded" />
+
+        </div>
+
+    </div>
+
+</body>
+</html>
+
+
+
+

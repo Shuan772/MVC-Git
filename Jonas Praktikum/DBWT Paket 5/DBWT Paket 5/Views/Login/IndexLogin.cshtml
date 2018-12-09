@@ -1,0 +1,58 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var name = Session["name"];
+    var role = Session["role"] ?? "Gast";
+}
+
+@if (name != null )
+{
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <div id="welcomeWindow">s
+            <h2>Willkommen</h2>
+            <p>
+                Hallo, <span>@name</span>. Du bist als @role angemeldet.
+            </p>
+            <p>Bestellen Sie jetzt ihr Essen und geniessen Sie spaeter!</p>
+
+            @using (Html.BeginForm("Logout", "Login", FormMethod.Post, new { @class = "form-horizontal" }))
+            {
+                <button type="submit" class="btn btn-default">Abmelden</button>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="col-md-4"></div>
+    <div id="loginWindow" class="col-md-4">
+        <br />
+        @using (Html.BeginForm("login", "Login", FormMethod.Post, new { @class = "form-horizontal" }))
+        {
+            <div class="form-group">
+               
+                <fieldset>
+                    <legend>Login</legend>
+                </fieldset>
+                        <h4>Benutzername</h4><br />
+                        @Html.TextBox("username", Request["username"], new { @class = "form-control", @placeholder = "Benutzer" })
+                        <h4>Passwort</h4>
+                        @Html.Password("password", "", new { @class = "form-control", @placeholder = "Passwort" })
+                <br />
+                
+                <button type="submit" class="btn btn-default">Anmelden</button>
+                
+            </div>
+            
+      
+        }
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            @using (Html.BeginForm("Index", "Register", FormMethod.Get, new { @class = "form-horizontal" }))
+            {
+                <button type="submit" class="btn btn-default">Registrieren</button>
+            }
+        </div>
+
+    </div>
+}

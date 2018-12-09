@@ -1,0 +1,101 @@
+﻿@using DBWT_Paket_5.Models
+
+@functions
+{
+
+    public static string BlobToBase64(object b)
+    {
+        byte[] bytes = (byte[])b;
+        if (bytes != null)
+        {
+            return Convert.ToBase64String(bytes);
+        }
+        return "";
+    }
+
+}
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var pr = (Produkt)ViewData["MyP"];
+    string base64text = BlobToBase64(pr.binaer);
+}
+<div class="col-md-2"></div>
+<div class="col-md-7">
+  
+    <h2>Details für "@pr.Beschreibung"</h2>
+    <img src="data:image/png;base64,@base64text" alt="@pr.Beschreibung" class="img-rounded" />
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#beschreibung" aria-controls="beschreibung" role="tab" data-toggle="tab">Beschreibung</a></li>
+        <li role="presentation"><a href="#zutaten" aria-controls="zutaten" role="tab" data-toggle="tab">Zutaten</a></li>
+        <li role="presentation"><a href="#bewertung" aria-controls="bewertung" role="tab" data-toggle="tab">Bewertung</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="beschreibung">@pr.text</div>
+        <div role="tabpanel" class="tab-pane" id="zutaten">keine Zutatenliste vorhanden</div>
+        <div role="tabpanel" class="tab-pane" id="bewertung">
+            <form action="http://bc5.m2c-lab.fh-aachen.de:8080/data.php" target="_blank" method="post">
+                <input type="hidden" name="kontrolle" value="war" />
+                <input type="hidden" name="matrikelnummer" value="3062039" />
+                <label>Benutzer</label>
+                <input name="benutzer" type="text" placeholder="Name" />
+                <label>Bewertung</label>
+                <select name="bewertung">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option selected value="5">5</option>
+                </select><br />
+                <textarea name="bemerkung" cols="100" rows="4" placeholder="Bewertung schreiben"></textarea>
+                <button class="btn-group btn" type="submit">Absenden</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="col-md-2">
+    @{
+        string betrag = pr.Preis.ToString();
+        if (Session["role"] == null || Session["role"].ToString() == "")
+        {
+            <h4>Gast Preis</h4>
+
+                                <h3>@pr.Preis €</h3>
+        }
+        else if (Session["role"] != null || Session["role"].ToString() != "")
+        {
+            if (Session["role"].ToString() == "student")
+            {
+                <h4>Studenten Preis</h4>
+                double p = pr.Preis - 0.5;
+                                    <h3>@p €</h3>
+            }
+            else if (Session["role"].ToString() == "mitarbeiter")
+            {
+                <h4>Mitarbeiter Preis</h4>
+                double p = pr.Preis - 0.5;
+                                    <h3>@p €</h3>
+            }
+            else if (Session["role"].ToString() == "gast")
+            {
+                <h4>Gast Preis</h4>
+
+                                    <h3>@pr.Preis</h3>
+            }
+
+        }
+
+    }
+ 
+    <button class="btn btn-default">
+        <span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span>
+        Vorbestellen
+    </button>
+</div>
+                      
+
+

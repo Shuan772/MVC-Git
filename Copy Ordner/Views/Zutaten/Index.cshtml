@@ -1,0 +1,47 @@
+﻿@model IEnumerable<DBWT_Paket_5.Models.Zutaten>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Bio)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Vegan)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Vegetarisch)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Glutenfrei)
+        </th>
+    </tr>
+
+@foreach (var item in Zutatenliste) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Bio)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Vegan)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Vegetarisch)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Glutenfrei)
+        </td>
+    </tr>
+}
+
+</table>

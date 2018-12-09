@@ -10,15 +10,15 @@ using MySql.Data.MySqlClient;
 
 namespace DBWT_Paket_5.Models
 {
-    
 
-    public class Benutzer 
+
+    public class Benutzer
     {
         [Key]
         public short Nummer { get; set; }
         [Required]
- 	    public string E_Mail { get; set; }
-
+        public string E_Mail { get; set; }
+        /*
         public DateTime LetzterLogin { get; set; }
         [Required]
         public string Nutzername { get; set; }
@@ -36,13 +36,14 @@ namespace DBWT_Paket_5.Models
         public string Salt { get; set; }
         [Required]
         public string Hash { get; set; }
+
         [Required]
         public ENUM("Gast" , "FH-Angehöriger") ISA { get; set; }
         public string Grund { get; set; }
         public Date Ablaufdatum { get; set; }
         private short Matrikelnummer { get; set; }
         public ENUM("ET", "INF", "ISE", "MCD", "WI") Studiengang { get; set; }
-
+        */
     }
-
+}
  

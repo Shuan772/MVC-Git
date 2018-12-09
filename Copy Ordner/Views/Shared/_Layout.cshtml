@@ -15,7 +15,7 @@
         <header>
             <div class="row">
                 <div class="col-2">
-                    <h1>@ViewBag.Title</h1>
+                    <h1>E-Mensa</h1>
                 </div>
                 <nav class="col-8">
                     <ul class="nav">
@@ -23,7 +23,7 @@
                             @Html.ActionLink("Startseite", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
                         </li>                 
                         <li class="nav-item">
-                            @Html.ActionLink("Mahlzeiten", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
+                            @Html.ActionLink("Mahlzeiten", "Index", "Produkte", new { area = "" }, new { @class = "nav-link" })
                         </li>
                         <li class="nav-item">
                             @Html.ActionLink("Bestellungen", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
@@ -54,16 +54,16 @@
                 <nav class="col-8">
                     <ul class="nav">
                         <li class="nav-item">
-                            @Html.ActionLink("Login", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
+                            @Html.ActionLink("Login", "Index", "Login", new { area = "" }, new { @class = "nav-link" })
                         </li>
                         <li class="nav-item">
-                            @Html.ActionLink("Registrieren", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
+                            @Html.ActionLink("Registrieren", "Registrieren", "Login", new { area = "" }, new { @class = "nav-link" })
                         </li>
                         <li class="nav-item">
                             @Html.ActionLink("Zutatenliste", "Index", "Zutaten", new { area = "" }, new { @class = "nav-link" })
                         </li>
                         <li class="nav-item">
-                            @Html.ActionLink("Impressum", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
+                            @Html.ActionLink("Impressum", "Impressum", "Home", new { area = "" }, new { @class = "nav-link" })
                         </li>
                         <li class="nav-item">Zeit: @DateTime.Now</li>
                     </ul>

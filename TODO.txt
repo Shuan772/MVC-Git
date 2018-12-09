@@ -73,3 +73,5 @@ Spezialisierung erfolgreich eingefügt werden konnte
  denken Sie z.B. an etwaige CHECK Constraints, die das Anlegen eines Studenten
 verhindern, dann dürfen die zugehörigen Zeilen in FE-Nutzer und FH-Angehörige nicht
 eingetragen werden
+
+https://www.c-sharpcorner.com/article/asp-net-mvc-passing-data-from-controller-to-view/

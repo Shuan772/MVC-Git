@@ -1,4 +1,4 @@
-Nachzuholen:
+﻿Nachzuholen:
 
 4.2 Login
 Legen Sie die SQL-Query zum Ermitteln der Rolle für einen
@@ -60,4 +60,16 @@ Links auf Controller
 
 
 
+Registrierung
 
+Neue erfolgreiche Registrierungen sind zunächst inaktiv
+(Benutzer.Aktiv) und sollen sich nicht anmelden können bis sie
+aktiviert wurden
+ nur aktive FE-Nutzer sollen sich anmelden können
+ das Flag setzen Sie manuell auf 1 per UPDATE im SQL-Client
+• Realisieren Sie mithilfe von Transaktionen, dass ein Benutzer
+wirklich nur dann in der Datenbank erscheint, wenn auch die
+Spezialisierung erfolgreich eingefügt werden konnte
+ denken Sie z.B. an etwaige CHECK Constraints, die das Anlegen eines Studenten
+verhindern, dann dürfen die zugehörigen Zeilen in FE-Nutzer und FH-Angehörige nicht
+eingetragen werden

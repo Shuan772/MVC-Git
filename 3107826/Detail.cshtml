@@ -1,0 +1,193 @@
+﻿@using System.Configuration;
+@using MySql.Data.MySqlClient;
+@{
+    Layout = "~/_Layout1.cshtml";
+    Page.Title = "Detail";
+
+
+}
+@section detailCSS {
+
+    <link rel="stylesheet" href="~/Detail.css" />
+}
+
+@{
+
+    string conString = ConfigurationManager.ConnectionStrings["dbConStr"].ConnectionString;
+    using (MySqlConnection con = new MySqlConnection(conString))
+    {
+
+        con.Open(); <!--öffne DB-->
+
+        MySqlCommand cmd; <!-- Objekt vom Typ MySqlCommand erstellen-->
+
+        string message = Request.QueryString["ID"];
+
+        int ID = 0; <!--ID mit standardwert belegen-->
+
+        Int32.TryParse(message, out ID); <!-- wenn kein int wert eingegeben wird, typumwandlung in int-->
+
+        try
+        {
+            cmd = con.CreateCommand();
+
+            cmd.CommandText = "SELECT Mahlzeiten.`Name`, Mahlzeiten.`Beschreibung`, Bilder.`Binaerdaten`, Bilder.`Alttext`, Preise.`Gastpreis` FROM Mahlzeiten JOIN hat ON Mahlzeiten.M_ID = hat.MahlzeitenID JOIN Bilder ON Bilder.ID = hat.BilderID JOIN Preise ON Preise.MahlzeitenID = Mahlzeiten.M_ID AND Preise.Jahr = year(now()) WHERE Mahlzeiten.M_ID =" + ID + ";";
+
+            MySqlDataReader lesen = cmd.ExecuteReader();            // ließt Daten
+
+            if (lesen.Read())
+            {
+                string name = lesen["Name"].ToString();
+                string Beschreibung = lesen["Beschreibung"].ToString();
+                string Gastpreis = lesen["Gastpreis"].ToString();
+
+
+                <div class="row">
+                    <!--Login Feld -->
+                    <div class="col-3">
+                        <div class="Auswahl">
+                            <form method="post" action="~/Login.cshtml" id="log-in">
+                                <fieldset>
+                                    <legend>Login</legend>
+                                    <label class="sr-only" for="benutzer-log">Benutzer</label>
+                                    <input id="benutzer-log" name="username" type="text" class="form-control" placeholder="Nutzername" />
+                                    <label class="sr-only" for="pwd">Passwort</label>
+                                    <input id="pwd" name="password" type="password" class="form-control" placeholder="Passwort" />
+                                    <button type="submit" id="anmelden">Anmelden</button>
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+
+
+                    <div class="col-7">
+                        <h3> Details für "@lesen["Name"]" </h3>
+                        <div class="col overflow-hidden">
+                            @{object data = lesen["Binaerdaten"];}
+                            @if (data == DBNull.Value)
+                            {
+                                <p class="error">Es kann kein Bild gezeigt werden </p>
+                            }
+                            else
+                            {
+                                @Base64Image((byte[])data, lesen["Alttext"].ToString())
+                            }
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        @Helper.Preis(ID)
+                        <button type="button" class="btn btn-outline-info vorbestellen"><i class="fas fa-utensils"></i> Vorbestellen </button>
+                    </div>
+                </div> <!--Reihe zuende-->
+            
+                <div class="inhalt">
+                    <!--Gesamter Inhalt der unteren Reihe-->
+                    <div class="row">
+                        <div class="col-3">
+                            <p>Melden Sie sich jetzt an, um die wirklich viel günstigeren Preise für Mitarbeiter oder Studenten zu sehen</p>
+                        </div>
+                        <div class="col-7">
+                            <!-- Tabs im unteren Bereich der Seite-->
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <!-- data-toggle(toggle=Kippschalter) um Tab zu aktivieren-->       <!--aria-controls: Identifiziert ein Element, dessen Inhalt durch das aktuelle Element kontrolliert wird-->
+                                    <a class="nav-link active" id="beschreibung-tab" data-toggle="tab" href="#beschreibung" role="tab" aria-controls="beschreibung-tab" aria-selected="true">Beschreibung</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="zutaten-tab" data-toggle="tab" href="#zutaten" role="tab" aria-controls="zutaten-tab" aria-selected="false">Zutaten</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="bewertungen-tab" data-toggle="tab" href="#bewertungen" role="tab" aria-controls="bewertungen-tab" aria-selected="false">Bewertungen</a>
+                                </li>
+                            </ul>
+                            <!-- Inhaltsbeschreibung-->
+                            <div class="tab-content" id="inhalt">
+                                <!--aria-labelledby: Identifizert ein Element über dessen id, das das aktuelle Element näher beschreibt-->
+                                <div class="tab-pane fade show active" id="beschreibung" role="tabpanel" aria-labelledby="beschreibung-tab">"@lesen["Beschreibung"]"</div>
+                                <!-- Inhalt für andere Felder -->
+                                <div class="tab-pane fade" id="zutaten" role="tabpanel" aria-labelledby="zutaten-tab">
+                                    Hier finden Sie die Zutaten zu unseren Gerichten<br /> Wir legen Wert auf gute Inhaltsstoffe.
+                                </div>
+                                <!--Bewertung Abschnitt-->
+                                <div class="tab-pane fade" id="bewertungen" role="tabpanel" aria-labelledby="bewertungen-tab">
+                                    <form id="formular" action="http://bc5.m2c-lab.fh-aachen.de/form.php" method="post">
+                                        <fieldset class="rahmen">
+                                            <!--Bemerkung-->
+                                            <div class="form-group row">
+                                                <label class="felder1" for="Bemerkung">Bemerkung</label>
+                                                <textarea class="felder2" name="Bemerkung" id="Bemerkung" cols="18" rows="2" placeholder="Bemerkung"></textarea>
+                                            </div>
+                                            <!--Benutzer-->
+                                            <div class="form-group row">
+                                                <label class="felder1" for="Benutzer">Benutzer</label> <!--Zweispaltig-->
+                                                <input class="eingabe form-control felder2" name="Benutzer" id="Benutzer" type="text" placeholder="Name">
+                                            </div>
+                                            <!--Bewertung -->
+                                            <div class="form-group row">
+                                                <label class="felder1" for="Bewertung">Bewertung</label>
+                                                <select name="bewertung" class="form-control auswahl eingabe felder2" id="Bewertung">
+                                                    <option selected>Bewertung</option>   <!--nur von 1-5 wählbar-->
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                </select>
+                                            </div>
+                                            <!-- versteckt durch CSS-->
+                                            <div class="form-group row">
+                                                <label class="sr-only" for="Matrikelnummer">Matrikel</label>
+                                                <div class="col-sm-6">
+                                                    <input type="text" name="Matrikelnummer" class="eingabe" id="Matrikelnummer" value="3174541">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="sr-only" for="Nachname">Erste 3 Buchstaben des Nachnamens</label>
+                                                <div class="col-sm-6">
+                                                    <input type="text" class="eingabe" id="Nachname" name="Kontrolle" value="Gie"> <!-- password = versteckt-->
+                                                </div>
+                                            </div>
+                                            <!--Abschicken-->
+                                            <div class="felder"></div>
+                                            <button type="submit" class="btn btn-outline-info abschicken ">Abschicken</button>
+                                        </fieldset>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+
+            else
+            {
+                @section WeiterleitungStartseite {
+                    <p class="error">Das hat nicht geklappt.</p>
+                    <meta http-equiv="refresh" content="3; URL=Start.cshtml">
+                }
+                con.Close();
+            }
+
+            lesen.Close();
+        }
+        catch (Exception)
+        {
+
+        }
+
+        con.Close();
+    }
+
+}
+
+
+@helper Base64Image(byte[] bindata, string alt)
+{
+    string Base64Prefix = "data:image/jpg;base64,";
+    string image = Base64Prefix + System.Convert.ToBase64String(bindata);
+
+    // Diese Base64-codierte Repräsentation der Bilddatei wird dem Browser direkt übergeben
+    <img src="@image" alt="@alt" class="details-img" />
+}

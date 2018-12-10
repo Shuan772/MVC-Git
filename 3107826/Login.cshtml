@@ -1,0 +1,187 @@
+﻿@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System.Web;
+@using System.Text;
+@using System.Security.Cryptography;
+@using MySql.Data.MySqlClient;
+@using System.Configuration;
+@using PasswordSecurity;
+
+@{
+    Page.Title = "Login";
+    Layout = "~/_Layout1.cshtml";
+}
+
+@section detailCSS 
+{
+    <link rel="stylesheet" type="text/css" href="~/Detail.css" />
+}
+
+@{
+    bool loggedin = false;
+    string test = Session["user"] as string;
+    string test2 = Session["role"] as string;
+
+    if (!string.IsNullOrEmpty(test))   // Testen ob eine Session Variable gesetzt ist
+    {
+        loggedin = true;
+    }
+
+}
+<div class="row ueberschrift">
+    <div class="col-2"></div>
+    <div class="col-6">
+    </div>
+    <div class="col-4"></div>
+</div>
+
+<div class="row mitte">
+    @{
+        if (IsPost)
+        {
+            if (loggedin == true)
+            {
+                // Abmelden
+                Session["user"] = null;
+                Session["role"] = null;
+                Response.Redirect("~/Login.cshtml");
+            }
+            else
+            {
+                //Anmelden
+                string username = Request["username"];         // Anfrage Username
+                string password = Request["password"];
+                int nummer;
+                string constring = ConfigurationManager.ConnectionStrings["dbConStr"].ConnectionString;
+                using (MySqlConnection con = new MySqlConnection(constring))
+                {
+                    con.Open();
+                    MySqlCommand command = con.CreateCommand();
+
+                    try                                                       // bei der Laufzeit können auch Fehler auftreten - deswegen try/catch
+                    {
+                        //SQL Statement zum Ausführen auf der Datenbank
+                        //mit eingegebenen Benutzernname mit DB vergleichen und SALT, HASH und Benutzername auslesen
+
+                        command.CommandText = "SELECT Benutzer.Nutzername, Benutzer.Nummer, Benutzer.`Salt`, Benutzer.`Hash` FROM Benutzer WHERE Benutzer.Nutzername= @username";
+                        command.Parameters.AddWithValue("username", username);
+                        MySqlDataReader reader = command.ExecuteReader();
+
+                        //falls der Reader nicht lesen kann, dann Error
+
+                        if (!reader.Read())
+                        {
+                            reader.Close();
+
+                            // Login Fail
+                            <div class="col-3">
+                                <p>Dies hat nicht geklappt! Bitte versuchen Sie es erneut.</p>
+                                <form method="post" id="log-in">
+                                    <fieldset>
+                                        <legend>Login</legend>
+                                        <label class="sr-only" for="benutzer-log">Benutzer</label>
+                                        <input id="benutzer-log" name="username" type="text" class="form-control" placeholder="Nutzername" />
+                                        <label class="sr-only" for="pwd">Passwort</label>
+                                        <input id="pwd" name="password" type="password" class="form-control" placeholder="Passwort" />
+                                        <button type="submit" id="anmelden">Anmelden</button>
+                                    </fieldset>
+                                </form>
+                            </div>
+                        }
+
+                        string check = "sha1:64000:18:" + reader["Salt"] + ":" + reader["Hash"];
+                        nummer = Int32.Parse(reader["Nummer"].ToString());
+
+                        reader.Close();
+
+                        bool passwordCheck = PasswordStorage.VerifyPassword(password, check);
+
+                        if (passwordCheck == true)
+                        {
+                            //Nutzername in Session übernehmen
+                            Session["user"] = username;
+                            MySqlCommand commandSession = con.CreateCommand();
+
+                            commandSession.CommandText = "SELECT Rolle FROM (SELECT COUNT(Nummer), 'Gast' AS Rolle FROM gäste WHERE Nummer = @nummer UNION SELECT COUNT(Nummer), 'Student' AS Rolle FROM Student WHERE Nummer = @nummer UNION SELECT COUNT(Nummer), 'Mitarbeiter' AS Rolle FROM Mitarbeiter WHERE Nummer = @nummer ) AS Rollentabelle ORDER BY `COUNT(Nummer)` DESC Limit 1";
+                            commandSession.Parameters.AddWithValue("nummer", nummer);
+
+                            MySqlDataReader readerSession = commandSession.ExecuteReader();
+
+                            //Rolle in Session übernehmen
+                            if (readerSession.Read())
+                            {
+                                Session["role"] = readerSession["Rolle"];
+                            }
+
+                            readerSession.Close();
+
+                            <div>
+                                <p>Hallo @Session["user"], Sie sind angemeldet als @Session["role"]</p>
+                                <form method="post" id="log-out">
+                                    <p><button type="submit" class="btn btn-primary">Abmelden</button></p>
+                                </form>
+                            </div>
+                        }
+
+                        else
+                        {
+                            // Login Fail
+                            <div class="col-3">
+                                <p>Dies hat nicht geklappt! Bitte versuchen Sie es erneut.</p>
+                                <form method="post" id="log-in">
+                                    <fieldset>
+                                        <legend>Login</legend>
+                                        <label class="sr-only" for="benutzer-log">Benutzer</label>
+                                        <input id="benutzer-log" name="username" type="text" class="form-control" placeholder="Nutzername" />
+                                        <label class="sr-only" for="pwd">Passwort</label>
+                                        <input id="pwd" name="password" type="password" class="form-control" placeholder="Passwort" />
+                                        <button type="submit" id="anmelden">Anmelden</button>
+                                    </fieldset>
+                                </form>
+                            </div>
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        <div class="col-2">
+                            <p>Hallo @Session["user"], Sie sind angemeldet als @Session["role"]</p>
+                            <form method="post" id="log-out">
+                                <p><button type="submit" class="btn btn-primary">Abmelden</button></p>
+                            </form>
+                        </div>
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (loggedin == true)
+            {
+                // sie sind angemeldet
+                <div class="col-2">
+                    <p>Hallo @Session["user"], Sie sind angemeldet als @Session["role"]</p>
+                    <form method="post" id="log-out">
+                        <p><button type="submit" class="btn btn-primary">Abmelden</button></p>
+                    </form>
+                </div>
+            } 
+            else
+            {
+                // Anmeldungsformular
+                <div class="col-3">
+                    <form method="post" id="log-in">
+                        <fieldset>
+                            <legend>Login</legend>
+                            <label class="sr-only" for="benutzer-log">Benutzer</label>
+                            <input id="benutzer-log" name="username" type="text" class="form-control" placeholder="Nutzername" />
+                            <label class="sr-only" for="pwd">Passwort</label>
+                            <input id="pwd" name="password" type="password" class="form-control" placeholder="Passwort" />
+                            <button type="submit" id="anmelden">Anmelden</button>
+                        </fieldset>
+                    </form>
+                </div>
+            }
+        }
+    }
+</div>

@@ -1,0 +1,167 @@
+﻿@using System.Configuration;
+@using MySql.Data.MySqlClient;
+
+@{
+    Layout = "~/_Layout1.cshtml";
+    Page.Title = "Produkte";
+    string conString = ConfigurationManager.ConnectionStrings["dbConStr"].ConnectionString;
+    MySqlConnection con = new MySqlConnection("Server=localhost;Port=3306;Database= e-Mensa;Uid=webapp;Pwd=mypass");
+    con.Open();
+    MySqlCommand cmd;
+
+}
+
+@section produkteCSS {
+
+    <link rel="stylesheet" href="~/Produkte.css" />
+}
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+@{ int aktuell = Request.QueryString["Kategorien_rek_hat"].AsInt(); }
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-3">
+            <div class="Auswahl">
+
+
+                <form action="~/Produkte.cshtml" method="get">
+
+                    <fieldset>
+                        <legend > Speisenliste filtern </legend>      <!--Kasten linke Seite Speisen filtern-->
+                        <select name="auswahl" id="Kategorie" class="form-control">
+                            @* <optgroup label="Generell">
+                                 <option value="16">Alle zeigen</option>
+                                </optgroup>
+                            *@
+                            @Helper.fillOberkat(aktuell)
+                        </select>
+
+                        <!--zum ankreuzen-->
+                        <label> <input @{if (Request.QueryString["Verfügbar"] == "1") { <text> checked</text>} } type="checkbox" name="Verfügbar" value="1"> nur verfügbare</label>
+                        <label> <input @{if (Request.QueryString["Vegetarisch"] == "2") { <text> checked</text>} } type="checkbox" name="Vegetarisch" value="2"> nur vegetarische</label>
+                        <label> <input @{if (Request.QueryString["Vegan"] == "3") { <text> checked</text>} } type="checkbox" name="Vegan" value="3"> nur vegane</label>
+                        <label>
+                            <input type="submit" class="btn btn-outline-info Speisenfilter" value="Speisen filtern">
+                        </label>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        <div class="col-7">
+            <div class="card-deck">
+               @Helper.Ueberschrift()
+              
+                <div class="card-deck row">
+                    <!-- Einbindung des Helpers für Bilder-->
+                    @*  @Helper.ProduktBilder()*@
+
+
+                    @{try
+                        {
+                            cmd = new MySqlCommand(querybuilder(Request.QueryString["auswahl"], Request.QueryString["Verfügbar"], Request.QueryString["Vegetarisch"], Request.QueryString["Vegan"]), con);
+                            MySqlDataReader reader = cmd.ExecuteReader();
+                            while (reader.Read())
+                            {
+                                <div class="col-3">
+                                    @{object data = reader["Binaerdaten"];}
+                                    @if (data == DBNull.Value)
+                                    {
+                                        <p class="choice">Es kann kein Bild gezeigt werden </p>
+                                    }
+                                    else if (Convert.ToBoolean(reader["Vorrat"]) == true)
+                                    {
+                                        @Helper.Base64Image((byte[])data, reader["Alttext"].ToString())
+
+                                        @reader["Name"] <br /> <a href="Detail.cshtml?id=@reader["M_ID"]">Details</a>
+                                    }
+
+                                    else
+                                    {
+                                        <div class="grayscale">
+
+                                            @Helper.Base64ImageGray((byte[])data, reader["Alttext"].ToString())
+                                            <br />
+                                            @reader["Name"]
+                                            <br />
+                                            <p>Vergriffen</p>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            reader.Close();
+                        }
+
+                        catch (Exception e)
+                        {
+                            <p class="error">Fehler</p>
+                            <pre>@e.Message</pre>
+                        }
+
+                    }
+
+                    @functions {
+                        string querybuilder(String katid, String verfüg, String veggie, String vegan)
+                        {
+                            string data = @"SELECT m.M_ID , Z.Vegetarisch ,Z.Vegan ,m.Name , m.Vorrat,`Binaerdaten`,Alttext, k.Bezeichnung FROM Mahlzeiten AS m
+                                                                                            JOIN hat AS mhb ON mhb.MahlzeitenID = m.M_ID
+                                                                                            JOIN enthält1 AS e ON m.M_ID=e.MahlzeitID
+                                                                                            JOIN Zutaten AS Z ON Z.ID = e.ZutatID
+                                                                                            JOIN Kategorien AS k ON k.ID = m.Kategorie_in
+                                                                                            JOIN Bilder AS b ON b.ID = mhb.BilderID";
+
+
+                            if (katid == "16")
+                            {
+
+                                if (verfüg == "1")
+                                {
+
+                                    data += " AND m.Vorrat = 1 ";
+                                }
+                                if (veggie == "2")
+                                {
+                                    data += " AND Z.Vegetarisch = 1 ";
+                                }
+                                if (vegan == "3")
+                                {
+                                    data += " AND Z.Vegan = 1 ";
+                                }
+                                return data += " GROUP BY m.Name;";
+                            }
+                            if (verfüg == "1")
+                            {
+                                data += " AND m.Vorrat = 1 ";
+                            }
+                            if (veggie == "2")
+                            {
+                                data += " AND Z.Vegetarisch = 1 ";
+                            }
+                            if (vegan == "3")
+                            {
+                                data += " AND Z.Vegan = 1 ";
+                            }
+                            if (katid != "16" && katid != null)
+                            {
+                                data += " AND m.Kategorie_in = " + katid + " ";
+                            }
+                            return data += " GROUP BY m.Name;";
+                        }
+
+                    }
+
+
+
+                </div> <!--Div card group-->
+            </div>  <!--Div col-7-->
+            <div class="col-2"> <div></div> </div> <!--Leeres Spalte auf der Rechten Seite-->
+        </div>
+
+    </div>  <!--Div Container-->
+</div>
+
+
+

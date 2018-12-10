@@ -1,0 +1,23 @@
+﻿@using System.Configuration
+@using MySql.Data.MySqlClient
+@{Layout = "~/_Layout1.cshtml";
+    Page.Title = "Zutaten";
+    string conString = ConfigurationManager.ConnectionStrings["dbConStr"].ConnectionString;
+}
+
+<!-- Tabelle aus Bootrsap ziehen-->
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Zutat</th>
+            <th scope="col">Vegan?</th>
+            <th scope="col">Vegetarisch?</th>
+            <th scope="col">Glutenfrei?</th>
+        </tr>
+    </thead>
+    <tbody>
+        @Helper.Zutatenliste()
+    </tbody>
+</table>
+
+

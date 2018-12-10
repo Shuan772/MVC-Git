@@ -1,0 +1,66 @@
+﻿@using System.Configuration                                 <!-- Verweis auf Web.config-->
+@using MySql.Data.MySqlClient;                              <!--damit Datenbank MySqlCLient gefunden werden kann-->
+
+@{Layout = "~/_Layout1.cshtml"; <!-- Referenz der Layout Seite-->
+    Page.Title = "Start";
+}
+
+@section startseiteCSS {
+
+    <link rel="stylesheet" href="~/Startseite.css" />
+}
+
+<div class="container">
+    <!--container, row, col, nav & form sind als Standardbegriffe hinterlegt-->
+    <!--2. Reihe mit Bild-->
+
+
+    <div class="row">
+        <div class="col-12">
+            <!--12 weil Bild so lang sein soll wie oben 3 cols zusammen-->
+            <img title="Foto1" id="Foto1" src="Foto1.jpg" alt="Foto1" />
+        </div>
+    </div>
+
+
+    <!--3. Reihe mit Text und Buttons-->
+
+
+    <div class="Abstand">
+        <div class="row">
+            <div class="col-2">
+                <p>Der Dienst e-Mensa ist noch beta. Sie können bereits <a href="Produkte.cshtml">Mahlzeiten</a> durchstöbern, aber noch nicht bestellen.</p>
+                <p>Registrieren Sie sich <a href="Login.cshtml">hier,</a> um über die Veröffentlichung des Dienstes per Mail informiert zu werden.</p>
+            </div>
+            <div class="col-10">
+
+
+                <!--in 3. Reihe noch eine Reihe integriert-->
+
+
+                <div class="row">
+                    <div class="col-9">
+                        <h2>Leckere Gerichte vorbestellen</h2><p>...und gemeinsam mit Kommilitonen und Freunden essen</p>
+                    </div>
+                    <div class="col-3">
+                        <button type="button" class="btn btn-primary"><i class="fas fa-hand-point-right"></i> Registrieren </button>
+                        <!--Hand Icon einbinden-->
+                        <button type="button" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Anmelden </button>
+                        <!--Login Icon einbinden-->
+                    </div>
+                </div>
+
+
+                <!--neue Reihe mit 2. Bild-->
+
+
+                <div class="Bild2">
+                    <img title="Foto2" id="Bild2" src="Foto2.jpeg" alt="Foto2" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</div> <!--Container wird geschlossen-->

@@ -1,0 +1,327 @@
+﻿@using System.Configuration
+@using MySql.Data.MySqlClient;
+
+
+@helper Zutatenliste()
+{
+
+
+    MySqlConnection verbinden = new MySqlConnection("Server = localhost;Port = 3306;Database =e-mensa;Uid = webapp;Pwd = mypass");
+
+    verbinden.Open();<!--öffne DB-->
+
+    MySqlCommand command = new MySqlCommand("SELECT zutaten.Name, zutaten.Bio, zutaten.Vegan, zutaten.Vegetarisch, zutaten.Glutenfrei FROM zutaten ORDER BY Bio DESC, Name ASC;", verbinden); <!-- nimmt Daten aus Zutaten und ordnen-->
+
+    MySqlDataReader reader = command.ExecuteReader(); <!-- ließt Daten-->
+
+
+    // Versuch einer Verbindung, ansonsten Catch --> Exeption also nicht neu laden sondern Fehlermeldung
+    try
+    {
+
+        // zeilenweises Auslesen mit while
+        while (reader.Read())
+        {
+            <tr>
+                <td>
+                    <!-- Googlesuche wenn man auf Begriff klickt + Extrafenster wenn Maus darauf-->
+                    @{
+                        <a target="_blank" href="http://www.google.de/search?q=@reader["Name"]" title="Suchen Sie nach @reader["Name"] im Web">@reader["Name"]</a>
+                    }
+                    @{
+                        bool bio = (bool)reader["bio"];
+                        if (bio == true)
+                        {
+                            <i class="fas fa-leaf"></i>
+                        }
+                    }
+                </td>
+                <td>
+                    @{
+                        bool vegan = (bool)reader["vegan"];
+                        if (vegan == true)
+                        {
+                            <i class="fas fa-check-circle"></i>
+                        }
+                        else
+                        {
+                            <i class="far fa-circle"></i>
+                        }
+                    }
+                </td>
+                <td>
+                    @{
+                        bool vegetarisch = (bool)reader["vegetarisch"];
+                        if (vegetarisch == true)
+                        {
+                            <i class="fas fa-check-circle"></i>
+                        }
+                        else
+                        {
+                            <i class="far fa-circle"></i>
+                        }
+                    }
+                </td>
+                <td>
+                    @{
+                        bool glutenfrei = (bool)reader["glutenfrei"];
+                        if (glutenfrei == true)
+                        {
+                            <i class="fas fa-check-circle"></i>
+                        }
+                        else
+                        {
+                            <i class="far fa-circle"></i>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+        reader.Close();
+    }
+    // bei Fehlschlag Ausgabe von Fehler
+    catch (Exception e)
+    {
+        <p class="error">Fehler</p>
+        <pre>@e.Message</pre>
+    }
+    // Verbindung schließen
+    verbinden.Close();
+}
+        }
+
+
+<!-- Helper damit Bilder auf Produktseite sind-->
+<!--Base64Image = Umwandlung von Binärdaten in Bilddateien-->
+@helper Base64Image(byte[] bindata, string alt)
+{
+
+
+    if (bindata != null && bindata.Length > 0)
+    {
+        string Base64Prefix = "data:image/jpg;base64,";
+        string image = Base64Prefix + System.Convert.ToBase64String(bindata);
+
+        // Diese Base64-codierte Repräsentation der Bilddatei wird dem Browser direkt übergeben
+        <img width="150" height="150" src="@image" alt="@alt" />
+    }
+    else
+    {
+        <p class="error">Es kann kein Bild gezeigt werden </p>
+    }
+}
+
+@helper Base64ImageGray(byte[] bindata, string alt)
+{
+    if (bindata != null && bindata.Length > 0)
+    {
+        string Base64Prefix = "data:image/jpg;base64,";
+        string image = Base64Prefix + System.Convert.ToBase64String(bindata);
+
+        // Diese Base64-codierte Repräsentation der Bilddatei wird dem Browser direkt übergeben
+        <img width="150" height="150" src="@image" alt="@alt" class="img-fluid main-img pic_greyfilter" />
+    }
+
+}
+
+@helper ProduktBilder()
+{
+
+
+    MySqlConnection verbinden = new MySqlConnection("Server=localhost;Port=3306;Database=e-Mensa;Uid=webapp;Pwd=mypass");
+
+    verbinden.Open();
+
+    MySqlCommand command = new MySqlCommand("SELECT `Name`, `M_ID`, `Beschreibung`, `Verfügbar`, `Vorrat`, `Binaerdaten`, `Alttext` FROM Mahlzeiten m join hat mhb on m.M_ID = mhb.MahlzeitenID join Bilder b on b.ID = mhb.BilderID;", verbinden);
+
+    MySqlDataReader reader = command.ExecuteReader();
+
+    try
+    {
+        while (reader.Read())
+        {
+            <div class="col-3">
+                <div class="Bilder">
+                    <div class="Text img">
+                        @Helper.Base64Image((byte[])@reader["Binaerdaten"], @reader["Alttext"].ToString())
+                        <div class="card-body">
+                            <p>@reader["Name"] <br> <a href="~/Detail.cshtml?id=@reader["M_ID"]">Details </a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        reader.Close();
+    }
+    // bei Fehlschlag Ausgabe von Fehler
+    catch (Exception e)
+    {
+        <p class="error">Fehler</p>
+        <pre>@e.Message</pre>
+    }
+    // Verbindung schließen
+    verbinden.Close();
+}
+}
+
+
+@helper fillOberkat(int aktuell)
+{
+
+    MySqlConnection verbinden = new MySqlConnection("Server=localhost;Port=3306;Database=e-Mensa;Uid= webapp;Pwd=mypass");
+
+    verbinden.Open();<!--öffne DB-->
+
+    MySqlCommand command = new MySqlCommand("SELECT `ID`, `Bezeichnung` FROM Kategorien WHERE Kategorien_rek_hat IS NULL;", verbinden); <!-- nimmt Daten aus Zutaten und ordnen-->
+
+    MySqlDataReader reader = command.ExecuteReader(); <!-- ließt Daten-->
+
+    // Versuch einer Verbindung, ansonsten Catch --> Exeption also nicht neu laden sondern Fehlermeldung
+
+    try
+    {
+
+        // zeilenweises Auslesen mit while
+        while (reader.Read())
+        {
+
+            int b = Convert.ToInt32(@reader["ID"]);
+            <optgroup label="@reader["Bezeichnung"]">
+                @Helper.fillUnterKat(b, aktuell)
+            </optgroup>
+
+        }
+
+        reader.Close();
+        verbinden.Close();
+    }
+    // bei Fehlschlag Ausgabe von Fehler
+
+    catch (Exception e)
+    {
+        <p class="error">Fehler</p>
+
+        <pre>@e.Message</pre>
+    };
+}
+
+<!-- Unterkategorien, damit sie angezeigt werden, ID von Oberkat wird an Bezeichnung übergeben-->
+@helper fillUnterKat(int b, int aktuell)
+{
+    MySqlConnection verbinden = new MySqlConnection("Server=localhost;Port=3306;Database=e-Mensa;Uid= webapp;Pwd=mypass");
+    verbinden.Open();<!--öffne DB-->
+    MySqlCommand command = new MySqlCommand("SELECT `ID`, `Bezeichnung` FROM Kategorien WHERE Kategorien_rek_hat= " + b.ToString(), verbinden); <!-- nimmt Daten aus Zutaten und ordnen-->
+    MySqlDataReader reader = command.ExecuteReader(); <!-- ließt Daten-->
+    // Versuch einer Verbindung, ansonsten Catch --> Exeption also nicht neu laden sondern Fehlermeldung
+
+    try
+    {
+
+        while (reader.Read())
+        {
+
+            <option @{if (Request.QueryString["auswahl"] == @reader["ID"].ToString()) { <text> selected</text> }} value="@reader["ID"]"> @reader["Bezeichnung"] </option>
+
+        }
+
+        reader.Close();
+        // Verbindung schließen
+        verbinden.Close();
+
+    }
+
+    // bei Fehlschlag Ausgabe von Fehler
+    catch (Exception e)
+    {
+        <p class="error">Fehler</p>
+        <pre>@e.Message</pre>
+    }
+}
+
+
+
+@helper Ueberschrift()
+{
+
+
+    MySqlConnection verbinden = new MySqlConnection("Server=localhost;Port=3306;Database=e-Mensa;Uid=webapp;Pwd=mypass");
+
+    verbinden.Open();
+
+    string query = @"SELECT Bezeichnung FROM kategorien WHERE ID = @über;";
+
+    MySqlCommand command = new MySqlCommand(query, verbinden);
+
+    command.Parameters.AddWithValue("über", Request.Params["auswahl"]);
+
+    MySqlDataReader reader = command.ExecuteReader();
+
+
+    if (!reader.Read())
+    {
+        <h3>Verfügbare Speisen (Bestseller)</h3>
+    }
+
+    else
+    {
+        <h3>Verfügbare Speisen (@reader["Bezeichnung"])</h3>
+    }
+    verbinden.Close();
+}
+
+}
+
+
+
+
+@helper Preis(int ID)
+{
+
+    MySqlConnection verbinden = new MySqlConnection("Server=localhost;Port=3306;Database=e-Mensa;Uid=webapp;Pwd=mypass");
+
+    verbinden.Open();
+
+    string query = @"SELECT Gastpreis, Studentpreis, MAPreis FROM preise WHERE MahlzeitenID = @ID";
+
+    MySqlCommand command = new MySqlCommand(query, verbinden);
+
+    command.Parameters.AddWithValue("ID", ID);
+
+
+    MySqlDataReader reader = command.ExecuteReader();
+
+
+    if (reader.Read())
+    {
+        if (Session["role"] != null)
+        {
+            if (Session["role"].ToString() == "Student")
+            {
+                <h4>Studentpreis @reader["Studentpreis"]€</h4>
+            }
+            else if (Session["role"].ToString() == "Gast")
+            {
+                <h4>Gastpreis @reader["Gastpreis"]€</h4>
+            }
+
+            else if (Session["role"].ToString() == "Mitarbeiter")
+            {
+                <h4>Mitarbeiterpreis @reader["MAPreis"]€</h4>
+            }
+        }
+        else
+        {
+            <h4>Gastpreis @reader["Gastpreis"]€</h4>
+        }
+
+    }
+
+    verbinden.Close();
+
+}
+
+
+
+
+
+

@@ -1,0 +1,63 @@
+﻿body 
+{
+    padding-top:20px;
+    padding-bottom:20px;
+}
+/*Abstand oben und unten, Rest von Bootstrap eingerichet*/
+
+nav a { border-right: 1px solid black;}
+nav a.last { border-right: 0 solid black;}
+nav li:last-child a { border-right: 0 solid black;}
+/*Striche zwischen einzelnen Reitern*/
+
+header
+{
+    border-bottom:2px solid black;
+    margin-top:5px;
+}
+
+footer
+{
+    border-top:2px solid black;
+    padding-top:10px;
+    margin-top:10px;
+}
+
+button
+{
+    margin-top:4px;
+    width:70%;
+    float:right;
+    
+}
+
+#Foto1
+{
+    width:100%;
+    margin-top:10px;
+ 
+}
+
+.Abstand
+{
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+.Bild2
+{
+    margin-top:50px;
+    margin-right:10px;
+
+}
+
+a 
+{
+    text-decoration: underline;
+    color: #00b5ad;
+}
+/*alle Links unterstrichen und in FH Farbe*/
+
+
+
+

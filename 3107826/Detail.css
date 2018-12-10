@@ -1,0 +1,205 @@
+﻿body 
+{
+    margin-top: 40px;
+    padding-bottom: 40px;
+}
+
+nav a { border-right: 1px solid black;}
+nav a.last { border-right: 0 solid black;}
+nav li:last-child a { border-right: 0 solid black;}
+/*Striche zwischen einzelnen Reitern*/
+
+header 
+{
+    border-bottom: 2px solid black;
+    margin-top: 10px;
+}
+
+footer 
+{
+    border-top: 2px solid black;
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+fieldset 
+{
+    margin-left: 2px;
+    margin-right: 2px;
+    padding-top: 0.35em;
+    padding-bottom: 0.625em;
+    padding-left: 0.75em;
+    padding-right: 0.75em;
+    border: 2px solid black;
+}
+/*Kasten um "Log in*/
+
+.felderlinks
+{
+    margin-bottom: 10px;
+    float: left;
+    width: 250px;
+}
+/*Bemerkungen, Benutzer und Bewertungen links außen*/
+
+#felderrechts 
+{
+    margin-bottom: 10px;
+    float: left;
+    width: 250px;
+}
+/*Bemerkungen, Name und Bewertungen rechts Innen*/
+
+#felderrechts1 
+{
+    margin-bottom: 10px;
+    float: left;
+    width: 250px;
+}
+
+#felderrechts2 {
+    margin-bottom: 10px;
+    float: left;
+    width: 250px;
+}
+
+#Matrikelnummer 
+{
+    display: none;
+}
+
+#Nachname 
+{
+    display: none;
+}
+/*Matrikelnummer und Name sollen nicht sichtbar sein*/
+
+.rahmen 
+{
+    width: 100%;
+    border: 2px solid black;
+}
+/*Rahmen für das fieldset mit Bemerkungen...*/
+
+#Lupe 
+{
+    max-height: 80%;
+    border-right: 0px;
+}
+/*damit Lupe genau so groß wie Suchfeld ist*/
+   
+.suchbutton 
+{
+    width: 5%;
+}
+/*graues Feld neben "Suche..."*/
+
+a 
+{
+    text-decoration: underline;
+    color: #00b5ad;
+}
+/*damit alle Links in FH Farbe und unterstrichen*/
+
+fieldset 
+{
+    border: 2px solid black;
+    padding: 20px;
+    margin-top: 40px;
+    margin-bottom: 30px;
+    text-align: center;
+    height: 100%;
+}
+/*Box um LogIn herum*/
+
+input 
+{
+    width: 100%;
+    margin-bottom: 8px;
+}
+/*Benutzereingabe in Such- oder Bewertungsfelder*/
+
+legend 
+{
+    text-align: left;
+    width: 70px;
+}
+/*Überschrift von LogIn Box "LogIn*/
+
+ul 
+{
+    list-style: none;
+    text-align: left;
+    padding-top: 10px;
+}
+
+/*damit in fieldsets keine Bullet points stehen*/
+
+.Foto 
+{
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+h3 
+{
+    font-size: 35px;
+    margin: 10px;
+}
+
+/*Details für Falafel*/
+
+h4 
+{
+    margin-top: 60px;
+    text-align: right;
+}
+/*Gast Preis*/
+
+button 
+{
+    width: 100%;
+    margin-top: 110px;
+}
+
+Textblock 
+{
+    border: 2px solid black;
+    border-top: 20px;
+    padding: 10px;
+}
+
+p 
+{
+    margin-left: 12px;
+    margin-right: 12px;
+    margin-bottom: 40px;
+}
+/*Textblock "Melden Sie...*/
+
+.overflow-hidden
+{
+    overflow:hidden;
+    height:200px
+}
+/*alles was nicht in col passt wird abgeschnitten*/
+
+.details-img {
+    width: 100%;
+    height: auto;
+    overflow:hidden;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

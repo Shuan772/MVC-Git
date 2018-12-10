@@ -1,0 +1,89 @@
+﻿body 
+{
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+nav a { border-right: 1px solid black;}
+nav a.last { border-right: 0 solid black;}
+nav li:last-child a { border-right: 0 solid black;}
+/*Striche zwischen einzelnen Reitern*/
+
+footer 
+{
+    border-top: 2px solid black;
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+header 
+{
+    border-bottom: 2px solid black;
+    margin-top: 10px;
+}
+
+ul
+{list-style:none;}
+
+/*damit keine Bulletpoints in der Liste zu sehen sind*/
+
+fieldset 
+{
+    margin-left: 2px;
+    margin-right: 2px;
+    padding-top: 10px;
+    padding-bottom: 0.625em;
+    padding-left: 0.75em;
+    padding-right: 0.75em;
+    border: 2px solid black;
+}
+/*Kasten um "Speisenliste filtern*/
+
+
+
+.Button
+{
+    display:block;
+    width:100%;
+    margin:auto;
+}
+/*Button des fieldsets formatieren*/
+
+.Bilder
+{
+    margin-left:20px;
+}
+/*Bilder mit Abstand*/
+
+h3
+{
+    margin-top:40px;
+    margin-bottom:20px;
+}
+
+.Speisenauswahl
+{
+    margin-top: 40px;
+    
+}
+/*Speisenliste filtern gesamtes fieldset nach unten rücken*/
+
+
+.Text
+{
+    text-align:center;
+}
+
+a 
+{
+    text-decoration: underline;
+    color: #00b5ad;
+}
+/*alle Links unterstrichen und in FH Farbe*/
+
+.Auswahl
+{
+    margin-top:40px;
+}
+
+

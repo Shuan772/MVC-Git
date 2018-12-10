@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+
+    <title>@Page.Title</title>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+    <!--Javascript einbinden-->
+
+    <link rel="stylesheet" href="~/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+
+    
+    @RenderSection("produkteCSS", required: false)
+    @RenderSection("startseiteCSS", required: false)
+    @RenderSection("detailCSS", required: false)
+
+    @RenderSection("WeiterleitungStartseite", required: false) <!--nicht auf jeder Seite nötig-->
+    <!-- Referenz des Helpers-->
+    <!-- wenn Helper hier nicht referenziert, wäre Detail Seite nicht valide-->
+
+
+</head>
+<body>
+    <div class="container">
+        <header>
+            <!--Kopfzeile der Seite bis zum Bild-->
+            <!--1. Reihe mit e-Mensa, Navigationsleiste und Suchfeld-->
+
+
+            <div class="row">
+                <!--gesamte Seite in einzelne rows und cols unterteilen, ingesamt 12-->
+                <div class="col-3">
+                    <h1>e-Mensa</h1>
+                </div>
+                <nav class="col-6">
+                    <!--nav für die Navigationsleiste als Standardtag-->
+                    <ul class="nav">
+                        <!-- 1. Listenelement erstellen 2. Klasse definieren, 3. a wegen Hyperlink 4. Referenz/Link angeben -->
+                        <li class="nav-item"><a class="nav-link" href="Start.cshtml">Start</a> </li>
+                        <li class="nav-item"><a class="nav-link" href="Produkte.cshtml">Mahlzeiten</a> </li>
+                        <li class="nav-item"><a class="nav-link active" href="#">Bestellung</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="https://www.fh-aachen.de/" target="blank">FH-Aachen</a></li>
+                    </ul>
+                </nav>
+                <!--Suchleiste, mit Methode get wird Google aufgerufen, sr-only vordefinierte Klasse-->
+                <div class="col-3">
+                    <form method="get" action="http://www.google.de/search" target="_blank">
+                        <label class="sr-only" for="suchbegriff">Suchbegriff</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="Lupe"> <i class="fas fa-search"></i> </span> <!--Lupe Icon-->
+                                <input class="suchfeld" type="search" name="q" value="" placeholder="Suchen..." id="suchbegriff" />
+                                <input class="suchbutton" type="submit" name="q" value="" />
+                                <input type="hidden" name="as_sitesearch" value="fh-aachen.de" /><br />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+        </header>
+    </div>
+    <!-- header und footer hier eingebunden, weil es auf allen Seiten gleich ist -->
+    <div class="container">
+        @RenderBody()                                   <!--Body von allen Unterseiten-->
+    </div>
+
+    <div class="container">
+        <footer>
+            <!--Fußzeile der Seite-->
+            <div class="row">
+                <div class="col-3" id="Copyright">
+                    (c) 2017 DBWT
+                </div>
+
+                <nav class="col-6">
+                    <!-- Navigationsleiste, nav = Standardbegriff-->
+                    <ul class="nav">
+                        <!-- 1. Listenelement erstellen 2. Klasse definieren, 3. a wegen Hyperlink 4. Referenz/Link angeben -->
+                        <li class="nav-item"><a class="nav-link" href="Login.cshtml">Login</a> </li>
+                        <li class="nav-item"><a class="nav-link" href="#">Registrieren</a> </li>
+                        <li class="nav-item"><a class="nav-link active" href="Zutaten.cshtml">Zutatenliste</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="Impressum.cshtml">Impressum</a> </li>
+                    </ul>
+                </nav>
+
+
+                <div class="col-3">
+                    <!-- damit Uhrzeit richtig formatiert ist-->
+                    @{string dat = DateTime.Now.ToString("HH:mm:ss"); }
+                    aktuelle Uhrzeit @dat
+                </div>
+            </div>
+
+        </footer>                               <!-- header und footer hier eingebunden, weil es auf allen Seiten gleich ist -->
+    </div>
+</body>
+</html>

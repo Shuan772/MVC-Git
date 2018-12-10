@@ -40,14 +40,14 @@ namespace DBWT_Paket_5.Models
             List<Zutaten> list = new List<Zutaten>(); // Liste initialisieren. mit list.Add(item) können der Liste Objekte passenden Typs hinzugefügt werden
 
             // info: das ist nicht das using aus den cshtml-Seiten
-            using (MySqlConnection con = new MySqlConnection(ConfigurationManager.ConnectionStrings["connstring"].ConnectionString))
-            {
+            MySqlConnection con = new MySqlConnection(ConfigurationManager.ConnectionStrings["connstring"].ConnectionString);
+            
                 try
                 {
                     con.Open();
                     using (MySqlCommand cmd = new MySqlCommand("", con))
                     {
-                        cmd.CommandText = "SELECT ID, Bio, Vegan, Vegetarisch, Glutenfrei FROM Zutaten";
+                        cmd.CommandText = "SELECT ID, Bio, Vegan, Vegetarisch, Glutenfrei, Name FROM Zutaten ORDER BY Bio DESC , Name ASC";
                         var r = cmd.ExecuteReader();
                         while (r.Read())
                         {
@@ -71,10 +71,11 @@ namespace DBWT_Paket_5.Models
                     string ex = e.Message;
                 }
                 // using schließt die Verbindung auch wieder ;)
-            }
+            
+
             return list; // letztlich die Liste zurückgeben, welche natürlich auch leer sein könnte!
 
-
         }
+        
     }
 }

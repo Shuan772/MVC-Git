@@ -13,10 +13,14 @@ namespace DBWT_Paket_5.Controllers
         // GET: Zutaten
         public ActionResult Index()
         {
+            
             List<Zutaten> ZutatenListe = new List<Zutaten>();
             Zutaten Zutaten = new Zutaten();
             ZutatenListe = Zutaten.GetAll();
-            return View(ZutatenListe);
+            ViewBag.Message = ZutatenListe;
+            
+            return View();
+
         }
 
     }

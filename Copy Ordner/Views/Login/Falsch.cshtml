@@ -1,0 +1,21 @@
+﻿@model DBWT_Paket_5.Models.Benutzer
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<p><font color="red">Daten sind Falsch</font></p>
+<div class="col-6">
+    <form action="/Login/Check" method="post">
+        <fieldset class="border align-content-center">
+            <legend class="scheduler-border">Login</legend>
+            <div>
+                <label for="name" class="dangerlabel">Name:</label>
+                <input value=@ViewBag.altname type="text" name="name" placeholder="Benutzer" required title="Min 1" class="form-control dangerinput">
+                <label for="password" class="dangerlabel">Password:</label>
+                <input value=@ViewBag.altpw type="password" name="password" placeholder="password" required title="Min 1" class="form-control dangerinput">
+                <button type="submit" class="form-control">Anmelden</button>
+            </div>
+        </fieldset>
+    </form>
+</div>

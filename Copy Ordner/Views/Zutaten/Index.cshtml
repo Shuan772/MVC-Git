@@ -34,31 +34,38 @@
                 <a title="Suchen sie nach @item.Name im Web." href="https://www.google.com/search?q=@item.Name" target="_blank">@item.Name</a>
                 @if ((bool)@item.Bio)
                 {
-                <img src="~/Pics/2000px-Bio-Siegel-EG-Öko-VO-Deutschland.svg.png" alt="Bio Siegel" />
+                    <img src="~/Pics/2000px-Bio-Siegel-EG-Öko-VO-Deutschland.svg.png" alt="Bio Siegel" />
                 }
             </td>
             <td>
                 @{if ((bool)@item.Vegan)
-                { <img src="~/Pics/600px-Black_check.svg.png" alt="True" />}
-                else
-                { <img src="~/Pics/X.png" alt="False" />}
+                    { <img src="~/Pics/600px-Black_check.svg.png" alt="True" />}
+                    else
+                    { <img src="~/Pics/X.png" alt="False" />}
                 }
             </td>
             <td>
                 @{if ((bool)@item.Vegetarisch)
-                { <img src="~/Pics/600px-Black_check.svg.png" alt="True" />}
-                else
-                { <img src="~/Pics/X.png" alt="False" />}
+                    { <img src="~/Pics/600px-Black_check.svg.png" alt="True" />}
+                    else
+                    { <img src="~/Pics/X.png" alt="False" />}
                 }
             </td>
             <td>
                 @{if ((bool)@item.Glutenfrei)
-                { <img src="~/Pics/600px-Black_check.svg.png" alt="True" />}
-                else
-                { <img src="~/Pics/X.png" alt="False" />}
+                    { <img src="~/Pics/600px-Black_check.svg.png" alt="True" />}
+                    else
+                    { <img src="~/Pics/X.png" alt="False" />}
                 }
             </td>
         </tr>
     }
-
+    <tfoot>
+        <tr>
+            <td>Angaben Ohne Gewehr.</td>
+            <td>Häckchen = Ja, X = Nein</td>
+            <td>Häckchen = Ja, X = Nein</td>
+            <td>Häckchen = Ja, X = Nein</td>
+        </tr>
+    </tfoot>
 </table>

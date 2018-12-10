@@ -27,27 +27,14 @@ SELECT Rolle FROM Nutzerrolle WHERE Nummer = 8;
 
 
 
-Übertragen:
-
-Bootstrap
-Pics
-_Layout
-Web.config
-Start
-StyleSheet
-
-Helper ???// brauchen wir nicht
 
 Noch Zu Übertragen:
 
 Detail
-Login
 Produkte
-Zutaten
 DetailHelper //AppcodeTransfer 
-LoginHelper //AppcodeTransfer 
 ProdukteHelper //AppcodeTransfer 
-ZutatenHelper //AppcodeTransfer 
+
 
 Anpassungen:
 

@@ -6,19 +6,12 @@ using System.Web.Mvc;
 
 namespace DBWT_Paket_5.Controllers
 {
-    public class HomeController : Controller
+    public class ProdukteController : Controller
     {
-        // GET: Home
+        // GET: Produkte
         public ActionResult Index()
         {
-
             return View();
         }
-        public ActionResult Impressum()
-        {
-
-            return View();
-        }
-
     }
 }

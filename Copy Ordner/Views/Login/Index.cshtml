@@ -2,17 +2,23 @@
 
 @{
     ViewBag.Title = "Login";
+
+}
+@{
+    var data = ViewBag.message;
 }
 
+<p>@data</p>
+
 <div class="col-6">
-    <form action="~/Login/Index" method="post">
+    <form action="~/Login/Check" method="post">
         <fieldset class="border align-content-center">
             <legend class="scheduler-border">Login</legend>
             <div>
                 <label for="name">Name:</label>
-                <input type="text" name="name" placeholder="Benutzer" required title="Min 1" class="form-control">
+                <input value=@ViewBag.altname type="text" name="name" placeholder="Benutzer" required title="Min 1" class="form-control">
                 <label for="password">Password:</label>
-                <input type="password" name="password" placeholder="password" required title="Min 1" class="form-control">
+                <input value=@ViewBag.altpw type="password" name="password" placeholder="password" required title="Min 1" class="form-control">
                 <button type="submit" class="form-control">Anmelden</button>
             </div>
         </fieldset>

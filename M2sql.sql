@@ -425,8 +425,14 @@ INSERT INTO MahlzeitenXBilder(`Bilder`, `Mahlzeiten`) VALUES ('8', '8');
 
 
 
-DELETE FROM `Benutzer` WHERE Nummer = 3;
+DELETE FROM `Benutzer` WHERE Nummer = 2;
 
- 
+INSERT INTO `Gäste` (ID , Grund , Ablaufdatum) Values
+( 21,'Dauerhafter Geschäftsbesuch' , '2020-01-02'),
+( 22,'Dauerhafter Geschäftsbesuch' ,'2020-01-02' ),
+( 23,'Dauerhafter Geschäftsbesuch' , '2020-01-02'),
+( 24,'Dauerhafter Geschäftsbesuch' ,'2020-01-02' ),
+( 25, 'Dauerhafter Geschäftsbesuch','2020-01-02' ),
+( 4, 'Wird verarscht' ,'2020-01-02' );
 
 

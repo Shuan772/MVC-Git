@@ -1,0 +1,48 @@
+Paket 4
+
+-Sessions und Cookies benutzen gelernt und die Layout-Seiten weiter
+ausgebaut
+A:
+Session[""] = var x ; // setzten
+Session[""]; 	//abrufen
+Session Variablen werden automatisch in den Session Cookie gepackt
+Falls nicht vorhanden Wird der erstellt.
+
+-Einen Hashing-Algorithmus verwendet, um sensible Daten zu schützen
+A:
+Über PAsswordStorage Salt für PW erzeugen und speichern und dann mit salt das password verifizieren
+
+-Die bereits erarbeitete Kenntnis über SQL DQL weiter vertieft und die
+nötigen Queries in C# nach Bedarf manipuliert
+A:
+Siehe SQL file
+
+-Stored Procedures und Views im DBMS erzeugt und verwendet
+A:
+Siehe SQL file
+
+-Sich mit C# Debugging und Haltepunkten vertraut gemacht
+A:
+Halte Punkt setzten und mit F5 starten bis Halte punkt erreicht wird dann Objekte betrachten.
+
+Paket 5 
+-Ein unstrukturiertes Webprojekt nach dem MVC-Pattern transformiert und
+die Komponenten Controller, Model und View verwendet
+A:
+Model = Klasse für eine Tablle 
+View = Html Schnipsel welche nur html und Razor variablen enthalten ENTHÄLT KEINE LOGIK
+Controller = Ruft Views auf, Regelt Logik und ruft Model auf sodass Daten aus der Daten Bank geholt werden.
+
+-Klassen nach Bedarf entworfen und Methoden für den Datenbankzugriff
+implementiert
+A:
+Modell Methoden...
+
+-Transaktionen kennengelernt und die Funktionsweise erlebt
+A:
+Mit Transaktionen kann man den DAtenbank zugriff so gestalten,dass nicht durch schlechtes Timing befehle verloren gehen können.
+
+-Scaffolding genutzt, um zu bestehenden Models effizient eine View anlegen
+zu lassen
+A:
+Siehe Registrierung.

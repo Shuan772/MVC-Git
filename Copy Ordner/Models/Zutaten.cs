@@ -6,23 +6,37 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using MySql.Data.MySqlClient;
+using System.Web.Mvc;
+using System.ComponentModel;
 
 namespace DBWT_Paket_5.Models
 {
 
+    [Bind(Exclude = "ID")]
     public class Zutaten
     {
-        [Key]
-        public int ID { get; set; }
-        [Required]
+        [ScaffoldColumn(false)]
+        public uint ID { get; set; }
+
+        [DisplayName("Bio")]
+        [Required(ErrorMessage = "Bio ist benötigt")]
         public bool Bio { get; set; }
-        [Required]
+
+        [DisplayName("Vegan")]
+        [Required(ErrorMessage = "Vegan ist benötigt")]
         public bool Vegan { get; set; }
-        [Required]
+
+        [DisplayName("Vegetarisch")]
+        [Required(ErrorMessage = "Vegetarisch ist benötigt")]
         public bool Vegetarisch { get; set; }
-        [Required]
+
+        [DisplayName("Glutenfrei")]
+        [Required(ErrorMessage = "Glutenfrei ist benötigt")]
         public bool Glutenfrei { get; set; }
-        [Required]
+
+        [DisplayName("Name")]
+        [Required(ErrorMessage = "Name ist benötigt")]
+        [StringLength(30)]
         public string Name { get; set; }
 
 
@@ -53,7 +67,7 @@ namespace DBWT_Paket_5.Models
                         {
 
                             Zutaten m = new Zutaten();
-                            m.ID = Int16.Parse(r["ID"].ToString());
+                            m.ID = UInt16.Parse(r["ID"].ToString());
                             m.Bio = Convert.ToBoolean(r["Bio"].ToString());
                             m.Vegan = Convert.ToBoolean(r["Vegan"].ToString());
                             m.Vegetarisch = Convert.ToBoolean(r["Vegetarisch"].ToString());

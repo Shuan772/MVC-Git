@@ -6,47 +6,79 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using MySql.Data.MySqlClient;
+using System.Web.Mvc;
+using System.ComponentModel;
 
 
 namespace DBWT_Paket_5.Models
 {
 
-
+    [Bind(Exclude = "Nummer")]
     public class Benutzer
     {
-        [Key]
+        [ScaffoldColumn(false)]
         public short Nummer { get; set; }
-        [Required]
+
+        [DisplayName("E-Mail")]
+        [Required(ErrorMessage = "E-Mail ist benötigt")]
+        [StringLength(100)]
         public string E_Mail { get; set; }
+
+        [DisplayName("Letzter Login")]
         public DateTime? LetzterLogin { get; set; }
-        [Required]
+
+        [DisplayName("Nutzername")]
+        [Required(ErrorMessage = "Nutzername ist benötigt")]
+        [StringLength(30)]
         public string Nutzername { get; set; }
+
+        [DisplayName("Geburtsdatum")]
         public DateTime? Geburtsdatum { get; set; }
-        [Required]
+
+        [DisplayName("Aktiv")]
+        [Required(ErrorMessage = "Aktiv ist benötigt")]
         public bool Aktiv { get; set; }
-        [Required]
+
+        [DisplayName("Anlegedatum")]
+        [Required(ErrorMessage = "Anlegedatum ist benötigt")]
         public DateTime? Anlegedatum { get; set; }
+
+        [DisplayName("Alter")]
         public short Alter { get; set; }
-        [Required]
+
+        [DisplayName("Vorname")]
+        [Required(ErrorMessage = "Vorname ist benötigt")]
+        [StringLength(50)]
         public string Vorname { get; set; }
-        [Required]
+
+        [DisplayName("Nachname")]
+        [Required(ErrorMessage = "Nachname ist benötigt")]
+        [StringLength(25)]
         public string Nachname { get; set; }
-        [Required]
+
+        [DisplayName("Salt")]
+        [Required(ErrorMessage = "Salt ist benötigt")]
+        [StringLength(32)]
         public string Salt { get; set; }
-        [Required]
+
+        [DisplayName("Hash")]
+        [Required(ErrorMessage = "Hash ist benötigt")]
+        [StringLength(24)]
         public string Hash { get; set; }
-        [Required]
-        public string Rolle { get; set; }
-        public string Grund { get; set; }
-        public DateTime? Ablaufdatum { get; set; }
-        private short Matrikelnummer { get; set; }
-        public string Studiengang { get; set; }
-        public string Büro { get; set; }
-        public string Telefon { get; set; }
+
+        [DisplayName("ISA")]
+        [Required(ErrorMessage = "ISA ist benötigt")]
+        public string ISA { get; set; }
 
         /*ENUM("Gast" , "FH-Angehöriger")
          ENUM("ET", "INF", "ISE", "MCD", "WI")
          */
+
+        public static string Rolle(Benutzer uebergabe)
+        {
+            return "test";
+        }
+
         public static Benutzer GetByNutzername(string Nutzername)
         {
             Benutzer m = new Benutzer();

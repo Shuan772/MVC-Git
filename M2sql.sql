@@ -1,5 +1,6 @@
 
 -- Drop Tables ....
+DROP Procedure IF EXISTS Nutzerrolle;
 -- Kreuz
 DROP TABLE IF EXISTS MahlzeitenXBilder;
 DROP TABLE IF EXISTS ZutatenXMahlzeiten;
@@ -205,6 +206,16 @@ CREATE TABLE BenutzerXBenutzer(
 	FOREIGN KEY (Benutzereins) REFERENCES Benutzer(Nummer),
 	FOREIGN KEY (Benutzerzwei) REFERENCES Benutzer(Nummer)
 );
+
+DELIMITER //
+CREATE PROCEDURE
+  Nutzerrolle                             /* Routine name */
+  (parameter_nummer INTEGER)  
+  MODIFIES SQL DATA                /* Data access clause */
+  BEGIN                        /* Routine body */
+  SELECT Rolle FROM (SELECT COUNT(ID), 'Gast' AS Rolle FROM gäste WHERE ID = parameter_nummer UNION SELECT COUNT(ID), 'Student' AS Rolle FROM Student WHERE ID = parameter_nummer UNION SELECT COUNT(ID), 'Mitarbeiter' AS Rolle FROM Mitarbeiter WHERE ID = parameter_nummer ) AS Rollentabelle ORDER BY `COUNT(ID)` DESC Limit 1;
+  END;//
+  DELIMITER ;
 
 ALTER TABLE Mahlzeiten ADD COLUMN `Name` VARCHAR(20) NOT NULL;
 

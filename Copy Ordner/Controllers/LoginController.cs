@@ -13,7 +13,11 @@ namespace DBWT_Paket_5.Controllers
         // GET: Login
         public ActionResult Index()
         {
-            return View();
+            if(Session["name"] == null)
+            {
+                return View();
+            }
+            return View("~/Views/Login/True.cshtml");
         }
 		 [HttpPost]
         public ActionResult Check()
@@ -113,7 +117,7 @@ namespace DBWT_Paket_5.Controllers
             {
                 ModelState.AddModelError("Gast", "Als FH Angehöriger muss man Student oder/und Mitarbeiter sein.");
             }
-
+            //Modelstate nicht mehr valid wenn Änderung
             if (ModelState.IsValid)
             {
                 Benutzer Neu = new Benutzer();

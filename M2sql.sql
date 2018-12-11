@@ -211,9 +211,10 @@ DELIMITER //
 CREATE PROCEDURE
   Nutzerrolle                             /* Routine name */
   (parameter_nummer INTEGER)  
-  MODIFIES SQL DATA                /* Data access clause */
+  MODIFIES SQL DATA  -- read              /* Data access clause */
   BEGIN                        /* Routine body */
   SELECT Rolle FROM (SELECT COUNT(ID), 'Gast' AS Rolle FROM gäste WHERE ID = parameter_nummer UNION SELECT COUNT(ID), 'Student' AS Rolle FROM Student WHERE ID = parameter_nummer UNION SELECT COUNT(ID), 'Mitarbeiter' AS Rolle FROM Mitarbeiter WHERE ID = parameter_nummer ) AS Rollentabelle ORDER BY `COUNT(ID)` DESC Limit 1;
+  -- Union zum betrachten von vielen tabellen in jeweils eigenen spalten , in einer abfrage , count zum ordnen mit descending
   END;//
   DELIMITER ;
 

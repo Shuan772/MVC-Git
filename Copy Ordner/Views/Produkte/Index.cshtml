@@ -13,7 +13,8 @@
     var bez =  ViewData["bez"];
     var vega =  ViewData["vega"];
     var vege =  ViewData["vege"];
-    var vorrat =  ViewData["vorrat"];
+    var vorrat = ViewData["vorrat"];
+    //var vorrat =  Int16.Parse(ViewData["vorrat"].ToString());//Änderung
     string ueberschrift = "";
 }
 <div class="row">
@@ -66,13 +67,13 @@
                     </select>
                     <br>
                     @{
-                        if ((bool)vorrat)
+                        if ((bool)vorrat)//Änderung
                         {
-                            <p><input type="checkbox" value="1" name="vor" checked> nur verfügbare<br></p>
+                            <p><input type="checkbox" value="1" name="vorrat" checked> nur verfügbare<br></p>
                         }
                         else
                         {
-                            <p><input type="checkbox" value="1" name="vor"> nur verfügbare<br></p>
+                            <p><input type="checkbox" value="1" name="vorrat"> nur verfügbare<br></p>
                         }
 
                         if ((bool)vege)

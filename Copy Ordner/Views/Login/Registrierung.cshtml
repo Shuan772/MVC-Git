@@ -1,0 +1,157 @@
+﻿@model DBWT_Paket_5.Models.Benutzer
+
+@{
+    ViewBag.Title = "Registrierung";
+}
+
+<h2>Registrierung</h2>
+<form action="/Login/NeuerBenutzer" method="post">
+        @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Benutzer</h4>
+        <hr />
+        @if (!ViewData.ModelState.IsValid)
+        {
+            foreach (ModelState modelState in ViewData.ModelState.Values)
+            {
+                <h2>FEHLER Liste </h2>
+                foreach (ModelError error in modelState.Errors)
+                {
+                    <span style="background-color:red" class="field-vali dation-error">@error.ErrorMessage</span>
+                }
+            }
+
+        }
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Nutzername, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Nutzername, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Nutzername, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.E_Mail, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.E_Mail, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.E_Mail, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Geburtsdatum, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+             <input type="date" name="Geburtsdatum"/>
+                @Html.ValidationMessageFor(model => model.Geburtsdatum, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Vorname, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Vorname, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Vorname, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Nachname, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Nachname, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Nachname, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2" for="password">Password</label>
+            <div class="col-md-10">
+                <input type="password" name="password" placeholder="password" required title="Min 8" class="form-control" minlength=8>
+            </div>
+            <label class="control-label  col-md-2" for="passwordwdh">Password Wiederholen</label>
+            <div class="col-md-10">
+                <input type="password" name="passwordwdh" placeholder="password" required title="Min 8" class="form-control" minlength=8>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label  col-md-2" for="ISA">Rolle</label>
+            <div class="col-md-10">
+                <select name="ISA" required>
+                    <optgroup label="Rolle">
+                        <option value="Gast" selected>Gast</option>
+                        <option value="FH">Fh-Angehöriger</option>
+                    </optgroup>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <fieldset class="border align-content-center">
+                <legend class="scheduler-border"><b>Nur Gäste</b></legend>
+                <label class="control-label col-md-2" for="Grund">Grund</label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" name="Grund" />
+                </div>
+                <label class="control-label col-md-2" for="Ablaufdatum">Ablaufdatum</label>
+                <div class="col-md-10">
+                    <input type="date" name="Ablaufdatum" class="form-control" />
+                </div>
+            </fieldset>
+        </div>
+        <div class="form-group">
+            <fieldset class="border align-content-center">
+                <legend class="scheduler-border"><b>Nur Für Studenten</b></legend>
+                <label class="control-label col-md-2" for="Student">Studiengang</label>
+                <div class="col-md-8">
+                    <input type="checkbox" name="Student" value="1" />
+                </div>
+                <label class="control-label col-md-2" for="Studiengang">Studiengang</label>
+                <div class="col-md-8">
+                    <select name="Studiengang" class="form-control">
+                        <optgroup label="Studiengang">
+                            <option value="INF" selected>Informatik</option>
+                            <option value="ET">Elektro Technik</option>
+                            <option value="ISE">ISE</option>
+                            <option value="MCD">MCD</option>
+                            <option value="WI">WI</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <label class="control-label col-md-2" for="Matrikelnummer">Mat Nr.</label>
+                <div class="col-md-8">
+                    <input type="number" name="Matrikelnummer" min=9999999 max=1000000000 class="form-control" />
+                </div>
+            </fieldset>
+        </div>
+
+
+        <div class="form-group">
+            <fieldset class="border align-content-center">
+                <legend class="scheduler-border"><b>Nur Für Mitarbeiter</b></legend>
+                <label class="control-label  col-md-2" for="Mitarbeiter">Mitarbeiter ?</label>
+                <div class="col-md-8">
+                    <input type="checkbox" name="Mitarbeiter" value="1" />
+                </div>
+                <label class="control-label  col-md-2" for="Telefon">Telefon Nr.</label>
+                <div class="col-md-10">
+                    <input type="text" name="Telefon" maxlength="20" class="form-control" />
+                </div>
+                <label class="control-label  col-md-2" for="Büro">Büro Nr</label>
+                <div class="col-md-8">
+                    <input type="text" name="Büro" maxlength="20" class="form-control" />
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+
+    </div>
+    </form>
+
+
+
+

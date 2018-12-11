@@ -22,7 +22,7 @@ namespace DBWT_Paket_5.Models
         public uint ID { get; set; }
 
         [DisplayName("Matrikelnummer")]
-        private short Matrikelnummer { get; set; }
+        public int Matrikelnummer { get; set; }
 
         [DisplayName("Studiengang")]
         public string Studiengang { get; set; }

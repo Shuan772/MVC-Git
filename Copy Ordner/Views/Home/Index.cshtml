@@ -18,9 +18,15 @@
                 <p>... und gemeinsam mit Kommilitonen und Freunden essen</p>
             </div>
             <div class="col-2 align-content-center">
-                <button type="button" class="bottom-margin"><i class="far fa-hand-point-right"></i>Registrieren</button>
-                <button type="button" class="left-margin"><i class="fas fa-sign-in-alt"></i>Anmelden</button>
-            </div>
+                @if (Session["name"] == null)
+                {<form method="get" action="/Login/Registrierung">
+                        <button type="submit" class="bottom-margin"><i class="far fa-hand-point-right"></i>Registrieren</button>
+                   </form>
+                 <form  method="get" action="/Login/Index">
+                     <button type="submit" class="left-margin"><i class="fas fa-sign-in-alt"></i>Anmelden</button>
+                 </form>
+                 }
+                </div>
         </div>
 
         <div class="row">
@@ -32,8 +38,6 @@
                 <div class="card" style="width: 46rem; align-content:center">
                     <img class="card-img-top" src="~/Pics/aachen.png" alt="Mensa der FH Aachen">
                 </div>
-
-
             </div>
         </div>
     </div>

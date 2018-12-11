@@ -1,0 +1,151 @@
+﻿@using DBWT_Paket_5.Models;
+@{
+    ViewBag.Title = "Index";
+}
+
+
+@using MySql.Data.MySqlClient
+@using System.Configuration;
+
+@{
+    var kat = (List<Kategorien>)ViewData["Kategorien"];
+    var produkte = (List<Produkte>)ViewData["Produkte"];
+    var bez =  ViewData["bez"];
+    var vega =  ViewData["vega"];
+    var vege =  ViewData["vege"];
+    var vorrat =  ViewData["vorrat"];
+    string ueberschrift = "";
+}
+<div class="row">
+    <div class="col-4">
+        <form method="get" action="/Produkte/Index">
+            <fieldset class="border align-content-center">
+                <legend class="scheduler-border">Speisenliste filtern</legend>
+                <div class="container center_div">
+                    <select name="bez">
+                        <optgroup label="Generell">
+                            <option value="0">Alle zeigen</option>
+                        </optgroup>
+
+                        @foreach (Kategorien kate in kat)
+                        {
+
+                            var mybezeichnung = kate.Bezeichnung;
+                            var myid = kate.ID;
+                            var kategorie = kate.Kategorie;
+                            if (kategorie == 0)
+                            {
+
+                                <optgroup label="@mybezeichnung">
+
+                                    @foreach (Kategorien kate2 in kat)
+                                    {
+
+                                        var kategorie2 = kate2.Kategorie;
+                                        if (kategorie2 == myid)
+                                        {
+
+                                            var mybezeichnung2 = kate2.Bezeichnung;
+                                            var myid2 = kate2.ID;
+                                            if ((Convert.ToInt32(bez) == myid2))
+                                            {
+                                                <option value="@myid2" selected="selected">@mybezeichnung2</option>
+                                                ueberschrift = mybezeichnung2;
+                                            }
+                                            else
+                                            {
+                                                <option value="@myid2">@mybezeichnung2</option>
+                                            }
+
+                                        }
+                                    }
+                                </optgroup>
+                            }
+                        }
+
+                    </select>
+                    <br>
+                    @{
+                        if ((bool)vorrat)
+                        {
+                            <p><input type="checkbox" value="1" name="vor" checked> nur verfügbare<br></p>
+                        }
+                        else
+                        {
+                            <p><input type="checkbox" value="1" name="vor"> nur verfügbare<br></p>
+                        }
+
+                        if ((bool)vege)
+                        {
+                            <p><input type="checkbox" value="1" name="vege" checked> nur vegetarische<br></p>
+                        }
+                        else
+                        {
+                            <p><input type="checkbox" value="1" name="vege"> nur vegetarische<br></p>
+                        }
+
+                        if ((bool)vega)
+                        {
+                            <p><input type="checkbox" value="1" name="vega" checked> nur vegane<br></p>
+                        }
+                        else
+                        {
+                            <p><input type="checkbox" value="1" name="vega"> nur vegane<br></p>
+                        }
+                    }
+                    <button type="submit">Speisen Filtern</button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="col-8">
+        @if (ueberschrift == "")
+        {
+            <h2>Verfügbare Speisen</h2>
+        }
+        else
+        {
+            <h2>Verfügbare Speisen (@ueberschrift) </h2>
+        }
+
+
+
+
+        @{
+
+            <div class="row">
+                @foreach (Produkte prod in produkte)
+                {
+
+
+                    var base64 = Convert.ToBase64String((byte[])prod.Binaerdaten);
+                    var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                    <div class="card">
+                        @{
+                            int x = Convert.ToInt32(prod.Vorrat);
+                            if (x >= 1)
+                            {
+                                <img class="card-img-top card-product-display" src="@imgSrc" alt="@prod.Alt_Text">
+                                <div class="card-body">
+                                    <h4 class="card-title">@prod.Name</h4>
+                                    <a Href="/Produkte/Detail?id=@prod.ID" class="btn btn-primary"><u>Details</u></a>
+                                </div>
+                            }
+                            else
+                            {
+                                <img class="card-product-display desaturate" src="@imgSrc" alt="@prod.Alt_Text">
+                                <div class="card-body">
+                                    <h5 class="card-title">@prod.Name</h5>
+                                    <a>Nicht verfügbar</a>
+                                </div>
+                            }
+
+                        }
+                    </div>
+
+                }
+            </div>
+
+        }
+    </div>
+</div>

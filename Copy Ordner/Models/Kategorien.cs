@@ -30,7 +30,7 @@ namespace DBWT_Paket_5.Models
         public uint BildID { get; set; }
 
         [DisplayName("Kategorie")]
-        public uint Kategorie { get; set; }
+        public int Kategorie { get; set; }
 
 
         public static List<Kategorien> GetAll()
@@ -45,7 +45,7 @@ namespace DBWT_Paket_5.Models
                 con.Open();
                 using (MySqlCommand cmd = new MySqlCommand("", con))
                 {
-                    cmd.CommandText = "SELECT ID, Bezeichnung, Bild, Kategorie FROM Kategorien";
+                    cmd.CommandText = "SELECT ID, Bezeichnung, Bild, Kategorie FROM Kategorien;";
                     var r = cmd.ExecuteReader();
                     while (r.Read())
                     {
@@ -53,8 +53,15 @@ namespace DBWT_Paket_5.Models
                         Kategorien m = new Kategorien();
                         m.ID = UInt16.Parse(r["ID"].ToString());
                         m.Bezeichnung = r["Bezeichnung"].ToString();
-                        m.BildID= UInt16.Parse(r["Bild"].ToString());
-                        m.Kategorie = UInt16.Parse(r["Kategorie"].ToString());
+                        if(r["Kategorie"].ToString() == "")
+                        {
+                            m.Kategorie = 0;
+                        }
+                        else
+                        {
+                            m.Kategorie = Convert.ToInt16(r["Kategorie"].ToString());
+                        }
+
 
                         list.Add(m);
                     }

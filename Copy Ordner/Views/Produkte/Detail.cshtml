@@ -1,0 +1,108 @@
+﻿@using MySql.Data.MySqlClient;
+@using System.Configuration;
+@using DBWT_Paket_5.Models;
+@{
+    ViewBag.Title = "Detail";
+    var produkt = (Produkte)ViewData["p"];
+    var preis = (double)ViewData["price"];
+    
+}
+  @if (produkt.ID != 0)
+  {
+      var base64 = Convert.ToBase64String((byte[])produkt.Binaerdaten);
+      var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+      var role = Session["role"];
+      if (role == null)
+      {
+          role = "Gast";
+      }
+        <div class="row">
+            <div class="offset-3 col-6">
+                <h1>
+                    Details für @produkt.Name
+                </h1>
+            </div>
+            <div class="col-3">
+                <h2 style="text-align:right">
+                    <b>@role</b>-Preis
+                </h2>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-3">
+                <partial name="_NoLogin.cshtml" />
+            </div>
+
+            <div class="col-6">
+
+                <div class="card">
+                    <img class="card-img-top" src="@imgSrc" alt="@produkt.Alt_Text">
+                </div>
+            </div>
+            <div class="col-3">
+                <h2 style="text-align:right">@preis €</h2>
+                <button type="button" style="align-self:auto"><i class="fas fa-utensils"></i>Vorbestellen</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <p>Melden Sie sich jetzt an, um die wirklich viel günstigeren Preise für Mitarbeiter oder Studenten zu sehen.</p>
+            </div>
+            <div class="col-6">
+                <div class="tabs">
+                    <div class="tab ">
+                        <input type="radio" id="tab-1" name="tab-group-1" checked>
+                        <label for="tab-1">Beschreibung</label>
+                        <div class="content">
+                            <p> @produkt.Beschreibung</p>
+                        </div>
+                    </div>
+                    <div class="tab">
+                        <input type="radio" id="tab-2" name="tab-group-1">
+                        <label for="tab-2">Zutaten</label>
+                        <div class="content">
+                            <p>Kichererbsen , Sesam</p>
+                        </div>
+                    </div>
+                    <div class="tab">
+                        <input type="radio" id="tab-3" name="tab-group-1">
+                        <label for="tab-3">Bewertungen</label>
+                        <div class="content">
+                            <p>7 von 10 Sternen</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <fieldset class="border align-content-center">
+                    <legend class="scheduler-border">Bewertung abschicken</legend>
+                    <form action="http://bc5.m2c-lab.fh-aachen.de/form.php" method="post">
+                        <label for="Bemerkung">Kommentar</label>
+                        <textarea placeholder="Bemerkung" name="bemerkung"></textarea>
+                        <label for="benutzer">Name</label>
+                        <input type="text" name="benutzer" placeholder="Name">
+                        <label for="bewertung">Sterne</label>
+                        <input type="number" name="bewertung" placeholder="5" min="1" max="5">
+                        <input type="hidden" name="matrikel" value="3033858">
+                        <input type="hidden" name="kontrolle" value="dor" />
+                        <button type="submit" name="action">Abschicken</button>
+                    </form>
+                    </fieldset>
+            </div>
+              
+        </div>
+  }
+  else
+  {
+      <p class="danger">
+                <br />404 Produkt not found.
+            </p>
+            <meta http-equiv="refresh" content="3;url=/Produkte/Index" />
+  }
+
+
+
+
+

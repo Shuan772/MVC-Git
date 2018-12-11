@@ -74,11 +74,69 @@ namespace DBWT_Paket_5.Models
          ENUM("ET", "INF", "ISE", "MCD", "WI")
          */
 
-        public static string Rolle(Benutzer uebergabe)
+        public static string Rolle(Benutzer b)
         {
-            return "test";
+            string tempname = "";
+            using (MySqlConnection con =
+               new MySqlConnection(ConfigurationManager.ConnectionStrings["connString"].ConnectionString))
+            {
+                try
+                {
+
+                    con.Open();
+                    MySqlCommand commandSession = con.CreateCommand();
+
+                    commandSession.CommandText = "Call Nutzerrolle(@nummer);";
+                    commandSession.Parameters.AddWithValue("nummer", b.Nummer);
+
+                    MySqlDataReader readerSession = commandSession.ExecuteReader();
+                    //Rolle in Session übernehmen
+                    if (readerSession.Read())
+                    {
+                        tempname = readerSession["Rolle"].ToString();
+                    }
+
+                    readerSession.Close();
+                    
+                }
+                catch (Exception e)
+                {
+                    // Haltepunkt?
+                    string ex = e.Message;
+
+                }
+                return tempname;
+            }
         }
 
+        public static bool SetLogin(Benutzer b)
+        {   
+            using (MySqlConnection con =
+                new MySqlConnection(ConfigurationManager.ConnectionStrings["connString"].ConnectionString))
+            {
+                try
+                {
+
+                    using (MySqlCommand cmd = new MySqlCommand("", con))
+                    {
+                        cmd.CommandText = "Update Benutzer Set LetzterLogin = @now WHERE Nutzername=@mid ";
+                        cmd.Parameters.AddWithValue("mid", b.Nutzername);
+                        cmd.Parameters.AddWithValue("now", DateTime.Now);
+                        con.Open();
+                        var r = cmd.ExecuteReader();
+                    }
+
+                }
+
+                catch (Exception e)
+                {
+                    string ex = e.Message;
+                    return false;
+                }
+             
+            }
+            return true;
+        }
         public static Benutzer GetByNutzername(string Nutzername)
         {
             Benutzer m = new Benutzer();
@@ -90,14 +148,14 @@ namespace DBWT_Paket_5.Models
                     
                     using (MySqlCommand cmd = new MySqlCommand("", con))
                     {
-                        cmd.CommandText = "SELECT Nummer, LetzterLogin, Nutzername, Aktiv, Vorname , Nachname , Salt , Hash ,ISA FROM Benutzer WHERE Nutzername=@mid ";
+                        cmd.CommandText = "SELECT Nummer, LetzterLogin, Nutzername, Aktiv, Vorname , Nachname , Salt , Hash ,ISA FROM Benutzer WHERE Nutzername= @mid ;";
                         cmd.Parameters.AddWithValue("mid", Nutzername);
                         con.Open();
                         var r = cmd.ExecuteReader();
                         if (r.Read())
                         {
 							if(! r.HasRows)
-							{ return null;}
+							{ return m;}
                             m.Nummer = Int16.Parse(r["Nummer"].ToString());
                             m.Vorname = r["Vorname"].ToString();
                             m.Nachname = r["Nachname"].ToString();
@@ -114,55 +172,18 @@ namespace DBWT_Paket_5.Models
                             m.Aktiv = Convert.ToBoolean(r["Aktiv"]);
                             m.Salt = r["Salt"].ToString();
                             m.Hash = r["Hash"].ToString();
-                            m.Rolle = r["ISA"].ToString();
-                        }
-                    }
-                    con.Close();
-                    con.Open();
-                    using (MySqlCommand cmd = new MySqlCommand("", con))
-                    {
-                        if (m.Rolle == "Gast")
-                        {
-                            cmd.CommandText = "SELECT Grund,Ablaufdatum FROM `gäste` WHERE Nummer =@mid ";
-                        }
-                        else
-                        {
-                            cmd.CommandText = "SELECT s.id, m.Telefon, m.`büro`, s.Studiengang  FROM Benutzer b LEFT JOIN Mitarbeiter m on m.id = b.nummer LEFT JOIN Student s on s.id = b.nummer WHERE Nummer =@mid ";
-                        }
-                        cmd.Parameters.AddWithValue("mid", m.Nummer);
+                            m.ISA = r["ISA"].ToString();
 
-                        var r = cmd.ExecuteReader();
-                        if (r.Read())
-                        {
-                            if (m.Rolle == "Gast")
-                            {
-                                m.Grund = r["Grund"].ToString();
-                                m.Rolle = "Gast";
-                                m.Ablaufdatum = Convert.ToDateTime(r["Ablaufdatum"]);
-                            }
-                            else
-                            {
-                                if (String.IsNullOrEmpty(r["id"].ToString()))
-                                {
-                                    m.Rolle = "Mitarbeiter";
-                                    m.Büro = r["büro"].ToString();
-                                    m.Telefon = r["Telefon"].ToString();
-                                }
-                                else
-                                {
-                                    m.Rolle = "Student";
-                                    m.Studiengang = r["Studiengang"].ToString();
-                                }
-                            }
                         }
                     }
+                  
                 }
 
                 catch (Exception e)
                 {
                     // Haltepunkt?
                     string ex = e.Message;
-                  
+                    m.E_Mail = ex;
                 }
                 // using schließt die Verbindung auch wieder ;)
             }
@@ -195,141 +216,112 @@ namespace DBWT_Paket_5.Models
 
         }
 
-
-
-
-        /*
-@using System.Configuration;
-@helper LoginIndex()
-{
-
-try
-{
-    if (Request.Form["logout"] == "1")
-    {
-        Session.Remove("User"); // Diese Daten sollen aus
-        Session.Remove("Role"); // der Datenbank kommen
-    }
-
-    if (string.IsNullOrEmpty(Session["User"] as string))
-    {
-        if (Request.Form["name"] != "" && Request.Form["password"] != "" && Request.Form["name"] != null && Request.Form["password"] != null)
+        public static bool Create(Benutzer  Neu, Gast gast, Mitarbeiter Ma, Studenten Stu , int State , string pw)
         {
-            MySqlConnection con = null;
-            try
+            using (MySqlConnection con =
+                new MySqlConnection(ConfigurationManager.ConnectionStrings["connString"].ConnectionString))
             {
-
-                con = new MySqlConnection(ConfigurationManager.ConnectionStrings["connstring"].ConnectionString);
-                var name = Request.Form["name"];
-                var pw = Request.Form["password"];
-                string query = "SELECT be.Nummer ,be.`hash` , be.`Salt` , be.`Nutzername` , be.`ISA` FROM benutzer be WHERE be.`Nutzername` ='" + name + "' ;";
                 con.Open();
-                MySqlCommand command = new MySqlCommand(query, con);
-                MySqlDataReader reader = command.ExecuteReader();
-                reader.Read();
-                if (reader.HasRows)
-                {
-                    string teststring = "sha1: 64000:18:" + reader["salt"].ToString() + ":" + reader["hash"].ToString();
-
-
-                    //string result = PasswordSecurity.PasswordStorage.CreateHash(reader["salt"].ToString() + Request.Form["password"]);
-
-                    bool testhash = PasswordSecurity.PasswordStorage.VerifyPassword(Request.Form["password"], "sha1:64000:18:" + reader["salt"].ToString() + ":" + reader["hash"].ToString());
-                    string nummer = reader["`Nutzername`"].ToString();
-                    string isa = reader["ISA"].ToString();
-                    con.Close();
-
-                    if (testhash)
+                MySqlCommand countSQL = con.CreateCommand();
+                countSQL.CommandText = "Select Count(Nummer) From Benutzer ;";
+                MySqlDataReader r = countSQL.ExecuteReader();
+                //TODO
+                r.Read();
+                int count = Int16.Parse(r["Count(Nummer)"].ToString());
+                int id = 20 + count;
+                con.Close();
+                con.Open();
+                var tr = con.BeginTransaction();
+                try
+                {// innerhalb der Connection con eine Transaktion beginnen
+                   
+                    using (MySqlCommand cmd = new MySqlCommand("", con))
                     {
-                        Session["User"] = nummer;
-                        Session["Role"] = isa;
-                @TrueLogin()
+                        cmd.Transaction = tr;
+                        //BEnutzer
+                        cmd.CommandText = "INsert INTO `Benutzer` (`Nummer`, `Vorname`, `Nachname`, `E-Mail`, `Nutzername`, `LetzterLogin`, `Anlegedatum`, `Geburtsdatum`, `Salt`, `Hash`, `Aktiv`) VALUES" +
+                            " (@id, @Vornamne, @Nachname, @mail, @Username, null , @andate, @gbdate,  @Salt, @hash, 0);";
+                        cmd.Parameters.AddWithValue("id", id);
+                        cmd.Parameters.AddWithValue("Vornamne", Neu.Vorname);
+                        cmd.Parameters.AddWithValue("Nachname", Neu.Nachname);
+                        cmd.Parameters.AddWithValue("mail", Neu.E_Mail);
+                        cmd.Parameters.AddWithValue("Username", Neu.Nutzername);
+                        cmd.Parameters.AddWithValue("andate", DateTime.Now);
+                        cmd.Parameters.AddWithValue("gbdate", Neu.Geburtsdatum);
+                        string pwhasstring = PasswordSecurity.PasswordStorage.CreateHash(pw);
+                        string[] pwarray = pwhasstring.Split(':');
+                        cmd.Parameters.AddWithValue("Salt", pwarray[3]);
+                        cmd.Parameters.AddWithValue("hash", pwarray[4]);
+
+                        int rows = cmd.ExecuteNonQuery(); // DML
+                        if(Neu.ISA == "Gast")
+                        {
+                            //gast
+                            cmd.CommandText = "INSERT INTO `Gäste` (ID , Grund , Ablaufdatum) Values (@id, @g, @dat); ";
+
+                            cmd.Parameters.AddWithValue("g", gast.Grund);
+                            cmd.Parameters.AddWithValue("dat", gast.Ablaufdatum);
+                            rows = cmd.ExecuteNonQuery();
                         }
                         else
                         {
-                    @FalseLogin(Request.Form["name"], Request.Form["password"])
+                            if(State == 1 || State == 3)
+                            {
+                                cmd.CommandText = "INSERT INTO `FHAngehörige` (`ID`) VALUES (@id);";
+                                //params
+
+                               
+
+                                rows = cmd.ExecuteNonQuery();
+                                //FH angehörige
+                                cmd.CommandText = "INSERT INTO `Student` (Matrikelnummer, Studiengang , ID) VALUES (@mat, @stugang, @id);";
+                                //params
+                                cmd.Parameters.AddWithValue("mat", Stu.Matrikelnummer);
+                                cmd.Parameters.AddWithValue("stugang", Stu.Studiengang);
+
+                                rows = cmd.ExecuteNonQuery();
+                                //student
+                            }
+                            if (State == 2 || State == 3)
+                            {
+                                if(State == 2 )
+                                {
+                                    cmd.CommandText = "INSERT INTO `FHAngehörige` (`ID`) VALUES (@id);";
+                                    //params
+                                    rows = cmd.ExecuteNonQuery();
+                                    //FH angehörige
+                                }
+                                cmd.CommandText = "INSERT INTO `Mitarbeiter` (`büro`, Telefon , ID) VALUES ( @b, @T, @id); ";
+                                //params
+                                cmd.Parameters.AddWithValue("T", Ma.Telefon);
+                                cmd.Parameters.AddWithValue("b", Ma.Büro);
+
+                                rows = cmd.ExecuteNonQuery();
+                                //MA
+                            }
                         }
+                        // alle fehlerfrei?  commit!
+                        tr.Commit();
+                        // falls es Probleme gab
+                      
+
                     }
-                    else
-                    {
-                        @FalseLogin(Request.Form["name"], Request.Form["password"])
-                    }
+
                 }
-                catch (Exception ex)
+
+                catch (Exception e)
                 {
-                    if (con != null)
-                    {
-                        con.Close();
-                    }
-                <p> @ex </p>
+                    tr.Rollback();
+                    string ex = e.Message;
+                    return false;
                 }
 
             }
-            else
-            {
-                @NOLogin()
-            }
+            return true;
         }
-        else
-        {
-            @TrueLogin()
-    }
 
-}
-catch (Exception ex)
-{
-        <p>@ex</p>
-}
-}
-@helper NOLogin()
-{
- 
-        <div class="col-6">
-            <form action="~/M2Git/Login.cshtml" method="post">
-                <fieldset class="border align-content-center">
-                    <legend class="scheduler-border">Login</legend>
-                    <div>
-                        <label for="name">Name:</label>
-                        <input type="text" name="name" placeholder="Benutzer" required title="Min 1" class="form-control">
-                        <label for="password">Password:</label>
-                        <input type="password" name="password" placeholder="password" required title="Min 1" class="form-control">
-                        <button type="submit" class="form-control">Anmelden</button>
-                    </div>
-                </fieldset>
-            </form>
-        </div>
 
-}
 
-@helper FalseLogin(string altname,string altpw)
-{
-    <p><font color="red">Daten sind Falsch</font></p>
-    <div class="col-6">
-        <form action="~/M2Git/Login.cshtml" method="post">
-            <fieldset class="border align-content-center">
-                <legend class="scheduler-border">Login</legend>
-                <div>
-                    <label for="name" class="dangerlabel">Name:</label>
-                    <input value=@altname type="text" name="name" placeholder="Benutzer" required title="Min 1" class="form-control dangerinput">
-                    <label for="password" class="dangerlabel">Password:</label>
-                    <input value=@altpw type="password" name="password" placeholder="password" required title="Min 1" class="form-control dangerinput">
-                    <button type="submit" class="form-control">Anmelden</button>
-                </div>
-            </fieldset>
-        </form>
-    </div>
-
-}
-
-@helper TrueLogin()
-{
-    <p>Hallo @Session["user"], Sie sind angemeldet als @Session["role"]</p>
-    <form action="~/M2Git/Login.cshtml" method="post">
-        <input type="hidden" name="logout" value="1" />
-        <button type="submit" class="form-control logoutbutton">Abmelden</button>
-    </form>
-
-}*/
 
 
 

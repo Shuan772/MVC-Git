@@ -15,12 +15,13 @@ x		Datei endung von CopyMe.MySql auf .tt ändern und ausführen.
 		
 	Bei Login: 
 		Cookie erstellen in dem Benutzer gespeichert ist. siehe Beispiel Json
-		Falls Cookie bereits vorhanden aber Benutzer falsch => Cookie löschen
+x		Falls Cookie bereits vorhanden aber Benutzer falsch => Cookie löschen
 	
 	In Navbar: 
 		Bestellung nimmt länge der Liste aus cookie und bildet diese als Zahl in klammern ab
 	
 	Auf Detail Seiten:
+		Preis Korrekt darstellen
 		Vorrat des Produktes wird als max für anzahl gestellt.
 		Falls Anzahl null Btn weg dafür "Ausverkauft".
 		Bestell BTN Führt per Post mit anzahl zu BestellungsController@addToList

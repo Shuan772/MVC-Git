@@ -2,7 +2,11 @@
 x	Nugets Holen:
 x		linq2db.MySql (by tarkov)
 x		Newtonsoft.Json 
-	
+
+
+Akutalisierung:
+	LINQPad um Ergebnisse der Queries zu inspizieren.
+		
 
 Adrian:
 	Aus models/LinQModels/CopyMe.MySql den neuen connection string hinzufügen und im web.config file unter den alten schreiben.
@@ -31,6 +35,8 @@ x		Falls Cookie bereits vorhanden aber Benutzer falsch => Cookie löschen
 	Neue Bestell Seite erzeugen welche den INhalt des Cookie darstellt
 		mit ID , Name , Einzelprei , Manipulierbarer Anzahl , Gesamt Preis , Totaler Preis und einem Auswahl feld für die Zeit(ab in 30 min bis 18 uhr)
 		zunächst auto generieren lassen.
+		Alle löschen (cookie) btn
+		Änderungen Übernehmen btn
 		Funkitonaler Bestell btn an BestellungsController@buchen
 	
 	BestellungsController@ChangeAmount
@@ -40,11 +46,12 @@ x		Falls Cookie bereits vorhanden aber Benutzer falsch => Cookie löschen
 	
 	BestellungsController@buchen
 		nimmt liste der Mahlzeiten.
-		Checkt ob Anzahl verfügbar. Nein-> zurück mit"nur noch x Anzahl bei Mahlzeit verfügbar" 
+		Checkt ob Anzahl verfügbar. Nein-> zurück mit"nur noch x Anzahl bei Mahlzeit verfügbar" Ja -> Geeignetes Feedback
 		Bestellung erstellen.
 		Kreuzprodukte einfügen.
 	
 	Trigger in DB erstellen der Anzahl verringert wenn bestellung für mahlzeit eingegangen ist. 
+	Trigger testen und vorkommende Situationen dokumentieren.
 
 	DispatchController:
 		Action Bestellung (JSONResalt)

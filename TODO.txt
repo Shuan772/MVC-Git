@@ -3,14 +3,16 @@ x	Nugets Holen:
 x		linq2db.MySql (by tarkov)
 x		Newtonsoft.Json 
 	
-	LinQ einrichten:
-x		Aus models/LinQModels/CopyMe.MySql den neuen connection string hinzufügen und im web.config file unter den alten schreiben.
-		??? /*Vlt geht der Schritt auch über GitHub*/
-		Datei endung von CopyMe.MySql auf .tt ändern und ausführen.
+
 Adrian:
+	Aus models/LinQModels/CopyMe.MySql den neuen connection string hinzufügen und im web.config file unter den alten schreiben.
 	GitHub pullen und alle Ordner überschreiben.
 	
 Alex:
+	LinQ einrichten:
+x		Aus models/LinQModels/CopyMe.MySql den neuen connection string hinzufügen und im web.config file unter den alten schreiben.
+x		Datei endung von CopyMe.MySql auf .tt ändern und ausführen.
+		
 	Bei Login: 
 		Cookie erstellen in dem Benutzer gespeichert ist. siehe Beispiel Json
 		Falls Cookie bereits vorhanden aber Benutzer falsch => Cookie löschen

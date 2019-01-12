@@ -1,1 +1,67 @@
-﻿
+﻿Beide:
+x	Nugets Holen:
+x		linq2db.MySql (by tarkov)
+x		Newtonsoft.Json 
+	
+	LinQ einrichten:
+x		Aus models/LinQModels/CopyMe.MySql den neuen connection string hinzufügen und im web.config file unter den alten schreiben.
+		??? /*Vlt geht der Schritt auch über GitHub*/
+		Datei endung von CopyMe.MySql auf .tt ändern und ausführen.
+Adrian:
+	GitHub pullen und alle Ordner überschreiben.
+	
+Alex:
+	Bei Login: 
+		Cookie erstellen in dem Benutzer gespeichert ist. siehe Beispiel Json
+		Falls Cookie bereits vorhanden aber Benutzer falsch => Cookie löschen
+	
+	In Navbar: 
+		Bestellung nimmt länge der Liste aus cookie und bildet diese als Zahl in klammern ab
+	
+	Auf Detail Seiten:
+		Vorrat des Produktes wird als max für anzahl gestellt.
+		Falls Anzahl null Btn weg dafür "Ausverkauft".
+		Bestell BTN Führt per Post mit anzahl zu BestellungsController@addToList
+		Controller schreibt ProduktID und Anzahl per DIctionary< int , int > in den Cookie
+		Controller führt zurück auf die Seite mit der Nachricht "@Anzahl @Produkt wurde in den Warenkorb gelegt".
+		
+	Neue Bestell Seite erzeugen welche den INhalt des Cookie darstellt
+		mit ID , Name , Einzelprei , Manipulierbarer Anzahl , Gesamt Preis , Totaler Preis und einem Auswahl feld für die Zeit(ab in 30 min bis 18 uhr)
+		zunächst auto generieren lassen.
+		Funkitonaler Bestell btn an BestellungsController@buchen
+	
+	BestellungsController@ChangeAmount
+		Erhält geänderte Liste.
+		passt die Änderungen an(in cookie).
+		Leitet auf Bestell Seite zurück.
+	
+	BestellungsController@buchen
+		nimmt liste der Mahlzeiten.
+		Checkt ob Anzahl verfügbar. Nein-> zurück mit"nur noch x Anzahl bei Mahlzeit verfügbar" 
+		Bestellung erstellen.
+		Kreuzprodukte einfügen.
+	
+	Trigger in DB erstellen der Anzahl verringert wenn bestellung für mahlzeit eingegangen ist. 
+
+	DispatchController:
+		Action Bestellung (JSONResalt)
+		nach HTTP Header X-Authorize = o2e1s1dpt4nwhwe fragen 
+		Mit Status Code zurück 
+		return Json der Bestellungen welche in 30 abgeholt werden sollen.
+	
+	Dossier:
+		Weisen Sie bei fehlendem oder fehlerhaftem HTTP Header den
+		Request mit geeignetem Status Code zurück. Begründen Sie im
+		Dossier die Wahl.
+		
+		Behandeln Sie im Dossier die folgenden Fragen:
+		
+		Gibt es andere HTTP Header, die für eine Authorisierung bereits
+		vorgesehen sind?
+		
+		Welche Möglichkeiten sind besser geeignet, Anfragen von anderen
+		Diensten zu authentifizieren, als per festgelegtem HTTP Header.
+		
+		Wie sieht ein Beispielaufruf über diese Methoden aus?
+		
+		

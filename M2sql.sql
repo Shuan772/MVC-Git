@@ -447,4 +447,10 @@ INSERT INTO `Gäste` (ID , Grund , Ablaufdatum) Values
 ( 25, 'Dauerhafter Geschäftsbesuch','2020-01-02' ),
 ( 4, 'Wird verarscht' ,'2020-01-02' );
 
-
+DROP TRIGGER IF EXISTS `mahlzeitenxbestellungen_after_insert`;
+DELIMITER //
+CREATE TRIGGER `mahlzeitenxbestellungen_after_insert` AFTER INSERT ON `mahlzeitenxbestellungen` FOR EACH ROW BEGIN
+UPDATE mahlzeiten SET mahlzeiten.Vorrat = mahlzeiten.Vorrat - 1;
+END//
+DELIMITER ;
+-- UPDATE mahlzeiten m JOIN mahlzeitenxbestellungen mxb ON m.ID = mxb.Mahlzeiten SET m.Vorrat = m.Vorrat -  mxb.Anzahl;

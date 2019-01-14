@@ -1,0 +1,101 @@
+﻿@model IEnumerable<DataModel.Mahlzeitenxbestellungen>
+
+@{
+    Dictionary<int, string[]> retDict = (Dictionary<int, string[]>)ViewData["dict"];
+    ViewBag.Title = "Index";
+    double gesamt = 0.0;
+    double preis = 1;
+    int zaehler = 1;
+
+}
+
+<h2>Bestllungen von @Session["name"]</h2>
+<form action="/Bestellung/ChangeAmount" method="post">
+    <table class="table">
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Mahlzeiten)
+            </th>
+            <th>
+                Mahlzeit
+            </th>
+            <th>
+                Einzelpreis
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Anzahl)
+            </th>
+            <th>
+                GesamtPreis
+            </th>
+
+        </tr>
+
+        @foreach (var item in retDict)
+        {
+        <tr>
+            <td>
+                @item.Key.ToString()
+                <input type="hidden" name="id @zaehler" value="@item.Key">
+            </td>
+            <td>
+               @item.Value[2].ToString()
+            </td>
+            <td>
+                @item.Value[1].ToString()
+                <!--1-->
+                €
+            </td>
+            <td>
+                
+                <input type="number" name="anzahl @zaehler" min="0" max=@item.Value[3]  value=@item.Value[0] />
+            </td>
+            <td>
+                @{
+                    var ep = Convert.ToDouble(item.Value[0]) * Convert.ToDouble(item.Value[1]);
+                    <p>@ep  €</p>
+                    gesamt += ep;
+                }
+            </td>
+        </tr>
+
+                        zaehler += 1;
+                    }
+
+            <tr>
+                <td><a href="/Bestellung/delete">Alle löschen</a></td>
+                <td><input type="submit" value="Änderungen Übernehmen!" /></td>
+                <td>Bestellung kostet</td>
+                <td></td>
+                <td>@gesamt  €</td>
+            </tr>
+    </table>
+</form>
+<form  action="/Bestellung/bestellen" method="post">
+    <select name="Abholdate">
+        @{
+
+            var run = DateTime.Now.AddMinutes(30);
+            run = run.AddMinutes(15 - (run.Minute % 15));
+
+            int z = 0;
+            while (z < 12
+                )
+            {
+                if (run.Minute == 0)
+                {
+                    <option value="@run.ToString()">@run.Hour:@run.Minute@run.Minute</option>
+                }
+                else
+                {
+                    <option value="@run.ToString()">@run.Hour:@run.Minute</option>
+                }
+                run = run.AddMinutes(15);
+                z++;
+            }
+        }
+    </select>
+    <input type="hidden" name="Endpreis" value="@gesamt"/>
+    <button type="submit">Kostenpflichtig bestellen</button>
+</form>

@@ -43,7 +43,27 @@
             </div>
             <div class="col-3">
                 <h2 style="text-align:right">@preis €</h2>
-                <button type="button" style="align-self:auto"><i class="fas fa-utensils"></i>Vorbestellen</button>
+                @{
+                    if (produkt.Vorrat == 0)
+                    {
+                        <p>Leider ausverkauft</p>
+                    }
+                    else
+                    {
+                        if (Session["name"] == null)
+                        {
+                            <p>Sie müssen eingeloggt sein um bestellen zu Können.</p>
+                        }
+                        else
+                        {
+                            <form action="/Produkte/AddToList" method="post">
+                                <input type="hidden" name="id" value="@produkt.ID" />
+                                <button type="submit" style="align-self:auto"> <i class="fas fa-utensils"></i>Vorbestellen </button>
+                            </form>
+                        }
+                    }
+
+                }
             </div>
         </div>
         <div class="row">

@@ -17,9 +17,9 @@ namespace DBWT_Paket_5.Controllers
             List<Zutaten> ZutatenListe = new List<Zutaten>();
             Zutaten Zutaten = new Zutaten();
             ZutatenListe = Zutaten.GetAll();
-            ViewBag.Message = ZutatenListe;
+            //ViewBag.Message = ;
             
-            return View();
+            return View(ZutatenListe);
 
         }
 

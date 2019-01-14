@@ -28,9 +28,44 @@ namespace DBWT_Paket_5.Models
         public string Studiengang { get; set; }
 
 
-        public static bool create(Studenten a)
+        public static bool exists(int matnr)
         {
-            return true;
+            bool r = true;
+            using (MySqlConnection con =
+               new MySqlConnection(ConfigurationManager.ConnectionStrings["connString"].ConnectionString))
+            {
+                try
+                {
+
+                    con.Open();
+                    MySqlCommand commandSession = con.CreateCommand();
+
+                    commandSession.CommandText = "SELECT ID , Matrikelnummer From Student WHERE Matrikelnummer =@matnr;";
+                    commandSession.Parameters.AddWithValue("matnr", matnr);
+
+                    MySqlDataReader readerSession = commandSession.ExecuteReader();
+                    //Rolle in Session übernehmen
+                    if (readerSession.Read())
+                    {
+                        if(readerSession["ID"].ToString() == "")
+                        {
+                            r = false;
+                            return r;
+                        }
+                        else
+                        { 
+                            return r;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    // Haltepunkt?
+                    string ex = e.Message;
+
+                }
+                return r;
+            }
         }
     }
 

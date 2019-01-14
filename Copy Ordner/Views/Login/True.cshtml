@@ -5,6 +5,7 @@
 }
 
 <p>Hallo @Session["name"], Sie sind angemeldet als @Session["role"]</p>
+<p>@ViewBag.fromCookie</p>
 <form action="/Login/Logout" method="post">
     <button type="submit" class="form-control logoutbutton">Abmelden</button>
 </form>

@@ -1,4 +1,64 @@
-﻿<!DOCTYPE html>
+﻿@using System.Web
+@using Newtonsoft.Json
+@{
+    try
+    {
+        ViewBag.message = TempData["message"].ToString();
+        ViewBag.error = TempData["error"].ToString();
+    }
+    catch { }
+    string logname = "Login";
+    if (Session["name"] != null)
+    {
+        logname = "Profil";
+    }
+    string bestellungname = "";
+    HttpCookie exists = HttpContext.Current.Request.Cookies.Get("dbwt");
+    if (Session["name"] == null)
+    {
+        bestellungname = "Bestellungen";
+    }
+    else
+    {
+        bestellungname = "Bestellungen(";
+
+        try
+        {
+            var count = 0;
+            if (exists == null )
+            {
+                bestellungname += count +")";
+            }
+            else {
+                // cookie-Wert in ein Objekt umwandeln (geben Sie in < > an, in welchen Typ)
+                Dictionary<string, Dictionary<int, int>> fromCookie = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<int, int>>>(exists.Value);
+
+                if (exists.Value == null)
+                {
+                    bestellungname += "0)";
+
+                }
+                else
+                {
+                    Dictionary<int, int> Bestellungen = fromCookie[Session["name"].ToString()];
+                    foreach ( var x in Bestellungen)
+                    {
+                        count += x.Value;
+                    }
+                    bestellungname += count +")";
+
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            ViewBag["error"] = e.Message;
+        }
+    }
+
+}
+
+<!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="utf-8" />
@@ -22,12 +82,12 @@
                     <ul class="nav">
                         <li class="nav-item">
                             @Html.ActionLink("Startseite", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
-                        </li>                 
+                        </li>
                         <li class="nav-item">
                             @Html.ActionLink("Mahlzeiten", "Index", "Produkte", new { area = "" }, new { @class = "nav-link" })
                         </li>
                         <li class="nav-item">
-                            @Html.ActionLink("Bestellungen", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
+                            @Html.ActionLink(bestellungname, "Index", "Bestellung", new { area = "" }, new { @class = "nav-link" })
                         </li>
                         <li class="nav-item"><a class="nav-link" href="https://www.fh-aachen.de/" target="_blank">Fh-Aachen</a> </li>
                     </ul>
@@ -42,7 +102,18 @@
             </div>
             <div> <hr /> </div>
         </header>
-
+        @{
+            if (ViewBag.message != null)
+            {
+                <h3>Mitteilung</h3>
+                <p>@ViewBag.message</p>
+            }
+            if (ViewBag.error != null)
+            {
+                <h3>Fehler</h3>
+                <p style="background-color:red">@ViewBag.error</p>
+            }
+        }
         @RenderBody()
 
         @RenderSection("scripts", required: false)
@@ -55,24 +126,24 @@
                 <nav class="col-8">
                     <ul class="nav">
                         <li class="nav-item">
-                            @Html.ActionLink("Login", "Index", "Login", new { area = "" }, new { @class = "nav-link" })
+                            @Html.ActionLink(logname, "Index", "Login", new { area = "" }, new { @class = "nav-link" })
                         </li>
                         @if (Session["name"] == null)
                         {
                             <li class="nav-item">
 
                                 @Html.ActionLink("Registrieren", "Registrierung", "Login", new { area = "" }, new { @class = "nav-link" })
-                                
+
                             </li>
                         }
-                            <li class="nav-item">
-                                @Html.ActionLink("Zutatenliste", "Index", "Zutaten", new { area = "" }, new { @class = "nav-link" })
-                            </li>
-                            <li class="nav-item">
-                                @Html.ActionLink("Impressum", "Impressum", "Home", new { area = "" }, new { @class = "nav-link" })
-                            </li>
-                            <li class="nav-item">Zeit: @DateTime.Now</li>
-                        </ul>
+                        <li class="nav-item">
+                            @Html.ActionLink("Zutatenliste", "Index", "Zutaten", new { area = "" }, new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("Impressum", "Impressum", "Home", new { area = "" }, new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item">Zeit: @DateTime.Now</li>
+                    </ul>
                 </nav>
             </div>
         </footer>

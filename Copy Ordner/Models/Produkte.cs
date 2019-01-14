@@ -175,6 +175,8 @@ namespace DBWT_Paket_5.Models
         {
             using (MySqlConnection con = new MySqlConnection(ConfigurationManager.ConnectionStrings["connString"].ConnectionString))
             {
+                double price = 99.99;
+
                 try
                 {
 
@@ -187,37 +189,46 @@ namespace DBWT_Paket_5.Models
                         cmd.Parameters.AddWithValue("jahr", DateTime.Now.Year);
 
                         MySqlDataReader r = cmd.ExecuteReader();
-                        r.Read();
-                        //Rolle in Session übernehmen
-                        if (Rolle == "Mitarbeiter")
+                        while (r.Read())
                         {
-                            if ((double)r["MA-Preis"] != 0.0)
+                            //Rolle in Session übernehmen
+                            if (Rolle == "Mitarbeiter")
                             {
-                                return Convert.ToDouble(r["MA-Preis"]);
-                            }
-                            return Convert.ToDouble(r["Gastpreis"]);
-                        }
-                        else
-                        {
-                            if (Rolle == "Student")
-                            {
-                                if((double)r["Studentpreis"] != 0.0)
+                                if ((double)r["MA-Preis"] != 0.0)
                                 {
-                                    return Convert.ToDouble(r["Studentpreis"]);
+                                    price = Convert.ToDouble(r["MA-Preis"]);
                                 }
-                                return Convert.ToDouble(r["Gastpreis"]);
+                                else
+                                {
+                                    price = Convert.ToDouble(r["Gastpreis"]);
+                                }
                             }
                             else
                             {
-                                return Convert.ToDouble(r["Gastpreis"]);
+                                if (Rolle == "Student")
+                                {
+                                    if ((double)r["Studentpreis"] != 0.0)
+                                    {
+                                        price = Convert.ToDouble(r["Studentpreis"]);
+                                    }
+                                    else
+                                    {
+                                        price = Convert.ToDouble(r["Gastpreis"]);
+                                    }
+                                }
+                                else
+                                {
+                                    price = Convert.ToDouble(r["Gastpreis"]);
+                                }
                             }
                         }
+                        return price; 
                     }
                 }
                 catch (Exception e)
                 {
 
-                    return 99.99;
+                    return price;
                 }
             }
         }

@@ -1,11 +1,12 @@
-﻿@model IEnumerable<DBWT_Paket_5.Models.Zutaten>
-    @using DBWT_Paket_5.Models;
+﻿@using DBWT_Paket_5.Models;
+@model IEnumerable<DBWT_Paket_5.Models.Zutaten>
+
 
 @{
     ViewBag.Title = "Index";
     List<Zutaten> ZutatenListe = new List<Zutaten>();
     //ViewBag.Message;
-    ZutatenListe = ViewBag.Message;
+   // ZutatenListe = ViewBag.Message;
 
 }
 
@@ -27,7 +28,7 @@
         </th>
     </tr>
 
-    @foreach (var item in ZutatenListe)
+    @foreach (var item in Model)
     {
         <tr>
             <td>

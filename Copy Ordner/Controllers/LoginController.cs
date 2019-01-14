@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using DBWT_Paket_5.Models;
-
+using Newtonsoft.Json;
 
 namespace DBWT_Paket_5.Controllers
 {
@@ -13,7 +13,13 @@ namespace DBWT_Paket_5.Controllers
         // GET: Login
         public ActionResult Index()
         {
-            if(Session["name"] == null)
+            try
+            {
+                ViewBag.message = TempData["message"].ToString();
+                ViewBag.error = TempData["error"].ToString();
+            }
+            catch { }
+            if (Session["name"] == null)
             {
                 return View();
             }
@@ -36,13 +42,53 @@ namespace DBWT_Paket_5.Controllers
              }
 			 if (teststr == "True")
 			 {
-                        Benutzer test = new Benutzer();
-                        test = Benutzer.GetByNutzername(name);
-                        Benutzer.SetLogin(test);
-						Session["name"] = name;
-						Session["role"] = Benutzer.Rolle(test);
+                    Benutzer test = new Benutzer();
+                    test = Benutzer.GetByNutzername(name);
+                    Benutzer.SetLogin(test);
+				    Session["name"] = name;
+				    Session["role"] = Benutzer.Rolle(test);
+                    if (HttpContext.Request.Cookies.Get("dbwt") != null)
+                    {
+                        // cookie auslesen
+                        HttpCookie exists = HttpContext.Request.Cookies.Get("dbwt");
+                    //ergebnis vorbereiten
 
-			 return View("~/Views/Login/True.cshtml");
+                    //Default setzten
+                    Dictionary<string, Dictionary<int, int>> fromCookie = new Dictionary<string, Dictionary<int, int>>();
+                    fromCookie.Add(name, new Dictionary<int, int>());
+                        HttpCookie c = new HttpCookie("dbwt");
+
+                        try
+                        {
+                        // cookie-Wert in ein Objekt umwandeln (geben Sie in < > an, in welchen Typ)
+                                fromCookie = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<int, int>>>(exists.Value);
+                                if(fromCookie != null && fromCookie.ContainsKey(name))
+                                {
+                                    
+                                }
+                                else
+                                {
+                                    if(fromCookie != null)
+                                      {
+                                        fromCookie.Clear();
+                                       }
+                                    
+                                    fromCookie = new Dictionary<string, Dictionary<int, int>>()
+                                    {
+                                            { name, null }
+                                    };
+                                }
+                              //  ViewBag.fromCookie = JsonConvert.SerializeObject(fromCookie);
+                        }
+                        catch (Exception e)
+                        {
+                            ViewBag.fromCookie = e.Message;
+                        }
+                    c.Value = JsonConvert.SerializeObject(fromCookie);
+                        c.Expires = DateTime.Now.AddHours(2);
+                        HttpContext.Response.Cookies.Set(c);
+                }
+                return View("~/Views/Login/True.cshtml");
             }
             else
             {
@@ -63,6 +109,9 @@ namespace DBWT_Paket_5.Controllers
             {
                 Session["name"] = null;
             }
+            HttpCookie c = new HttpCookie("dbwt");
+            c.Expires = DateTime.MinValue;
+            HttpContext.Response.Cookies.Set(c);
             return View("~/Views/Login/Index.cshtml");
         }
 
@@ -117,6 +166,10 @@ namespace DBWT_Paket_5.Controllers
             {
                 ModelState.AddModelError("Gast", "Als FH Angehöriger muss man Student oder/und Mitarbeiter sein.");
             }
+          /*  if (Request["Student"] == "1" && Studenten.exists(Int32.Parse(Request["Matrikelnummer"])))
+            {
+                ModelState.AddModelError("Student", "Matrikelnummer schon belegt.");
+            }*/
             //Modelstate nicht mehr valid wenn Änderung
             if (ModelState.IsValid)
             {

@@ -373,14 +373,14 @@ REPLACE INTO `kategorien` (`ID`, `Bezeichnung`, `Kategorie`) VALUES
 	(23,'Suppen',17);
 	
 INSERT INTO Mahlzeiten (ID,`Beschreibung` , `Name`, `Vorrat`,`Kategorie`)
-VALUES(1,"Beschreibung für Curry Wok", "Curry Wok","0","11"),
-	(2,"Beschreibung für Schnitzel", "Schnitzel","2","12"),
-	(3,"Beschreibung für Bratrolle", "Bratrolle","1","13"),
-	(4,"Beschreibung für Krautsalat", "Krautsalat","1","14"),
+VALUES(1,"Beschreibung für Curry Wok", "Curry Wok","7","11"),
+	(2,"Beschreibung für Schnitzel", "Schnitzel","8","12"),
+	(3,"Beschreibung für Bratrolle", "Bratrolle","20","13"),
+	(4,"Beschreibung für Krautsalat", "Krautsalat","3","14"),
 	(5,"Beschreibung für Falafel", "Falafel","1","15"),
-	(6,"Beschreibung für Currywurst", "Currywurst","1","14"),
-	(7,"Beschreibung für Käsestulle", "Käsestulle","0","16"),
-	(8,"Beschreibung für Spiegelei", "Spiegelei","1","17");
+	(6,"Beschreibung für Currywurst", "Currywurst","20","14"),
+	(7,"Beschreibung für Käsestulle", "Käsestulle","4","16"),
+	(8,"Beschreibung für Spiegelei", "Spiegelei","20","17");
 
 REPLACE INTO `zutatenxmahlzeiten` (`Zutaten`, `Mahlzeiten`) VALUES
 	(10080, 1), -- vegan vegetarisch nn
@@ -447,10 +447,26 @@ INSERT INTO `Gäste` (ID , Grund , Ablaufdatum) Values
 ( 25, 'Dauerhafter Geschäftsbesuch','2020-01-02' ),
 ( 4, 'Wird verarscht' ,'2020-01-02' );
 
+
+
+
+
+
+
 DROP TRIGGER IF EXISTS `mahlzeitenxbestellungen_after_insert`;
 DELIMITER //
 CREATE TRIGGER `mahlzeitenxbestellungen_after_insert` AFTER INSERT ON `mahlzeitenxbestellungen` FOR EACH ROW BEGIN
-UPDATE mahlzeiten SET mahlzeiten.Vorrat = mahlzeiten.Vorrat - 1;
+UPDATE mahlzeiten mahl JOIN mahlzeitenxbestellungen mxb ON mahl.ID = mxb.Mahlzeiten SET mahl.Vorrat =  mahl.Vorrat - mxb.Anzahl WHERE mxb.Mahlzeiten = NEW.Mahlzeiten AND mxb.Bestellungen = NEW.Bestellungen;
 END//
 DELIMITER ;
 -- UPDATE mahlzeiten m JOIN mahlzeitenxbestellungen mxb ON m.ID = mxb.Mahlzeiten SET m.Vorrat = m.Vorrat -  mxb.Anzahl;
+
+-- Abfragen
+-- 
+-- REPLACE INTO Bestellungen (Nummer , Benutzer) Values
+-- ( 1 , 1 );
+-- 
+-- REPLACE INTO mahlzeitenxbestellungen (Mahlzeiten , Bestellungen , Anzahl) Values
+-- ( 3 , 1 , 1),
+-- ( 6 , 1 , 2),
+-- ( 8 , 1 , 3);
